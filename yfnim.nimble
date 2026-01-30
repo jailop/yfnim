@@ -64,3 +64,41 @@ task runExample, "Run a specific example (usage: nimble runExample <name>)":
   
   echo "Compiling and running ", examplePath, "..."
   exec "nim c -d:ssl -p:src -r " & examplePath
+
+task docs, "Generate API documentation":
+  echo "Generating API documentation..."
+  
+  # Create docs/api directory if it doesn't exist
+  mkDir "docs/api"
+  
+  # Generate documentation for main module
+  echo "  Generating docs for yfnim module..."
+  exec "nim doc --project --index:on --outdir:docs/api src/yfnim.nim"
+  
+  # Generate documentation for individual modules
+  echo "  Generating docs for types module..."
+  exec "nim doc --outdir:docs/api src/yfnim/types.nim"
+  
+  echo "  Generating docs for urlbuilder module..."
+  exec "nim doc --outdir:docs/api src/yfnim/urlbuilder.nim"
+  
+  echo "  Generating docs for retriever module..."
+  exec "nim doc --outdir:docs/api src/yfnim/retriever.nim"
+  
+  echo "  Generating docs for quote_types module..."
+  exec "nim doc --outdir:docs/api src/yfnim/quote_types.nim"
+  
+  echo "  Generating docs for quote_retriever module..."
+  exec "nim doc --outdir:docs/api src/yfnim/quote_retriever.nim"
+  
+  # Generate index
+  echo "  Generating documentation index..."
+  exec "nim buildIndex --outdir:docs/api docs/api"
+  
+  echo ""
+  echo "Documentation generated successfully!"
+  echo "Open docs/api/yfnim.html in your browser to view."
+  echo ""
+  echo "Tip: To serve documentation locally:"
+  echo "  cd docs/api && python3 -m http.server 8000"
+  echo "  Then open http://localhost:8000/yfnim.html"
