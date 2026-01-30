@@ -1,9 +1,44 @@
 ## Yahoo Finance Data Types Module
 ##
-## This module defines the core data types for the yfnim library:
-## - Interval: Enum for time intervals (1m, 1h, 1d, etc.)
-## - HistoryRecord: Single OHLCV data point
-## - History: Time series of OHLCV data
+## This module defines the core data structures for the yfnim library.
+##
+## **Core Types:**
+## - `Interval`_: Enum representing time intervals (1m, 1h, 1d, etc.)
+## - `HistoryRecord`_: Single OHLCV data point with timestamp
+## - `History`_: Time series of OHLCV data for a symbol
+##
+## **Key Functions:**
+## - `newHistory`_: Create empty History object
+## - `len`_: Get number of records
+## - `append`_: Add record to history
+## - `toJson`_: Export to JSON string
+## - `fromJson`_: Import from JSON string
+## - `parseInterval`_: Convert string to Interval enum
+##
+## **Example:**
+##
+## .. code-block:: nim
+##   import yfnim/types
+##   
+##   # Create new history
+##   var history = newHistory("AAPL", Int1d)
+##   
+##   # Add a record
+##   let record = HistoryRecord(
+##     time: 1609459200,
+##     open: 132.43,
+##     high: 133.61,
+##     low: 131.72,
+##     close: 133.52,
+##     volume: 99116616
+##   )
+##   history.append(record)
+##   
+##   # Export to JSON
+##   let jsonStr = history.toJson()
+##   
+##   # Import from JSON
+##   let loaded = fromJson(jsonStr)
 ##
 
 import std/json

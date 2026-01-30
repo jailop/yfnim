@@ -1,6 +1,27 @@
 ## Yahoo Finance URL Builder Module
 ##
-## This module handles URL construction for Yahoo Finance API requests
+## This module handles URL construction for Yahoo Finance API requests.
+## It builds properly encoded URLs with query parameters for fetching
+## historical data.
+##
+## **Functions:**
+## - `buildQuery`_: Create query string from parameters
+## - `makeUrl`_: Combine base URL with query string
+## - `buildYahooUrl`_: Build complete Yahoo Finance API URL
+##
+## **Example:**
+##
+## .. code-block:: nim
+##   import yfnim/urlbuilder
+##   import yfnim/types
+##   
+##   # Build URL for AAPL daily data
+##   let url = buildYahooUrl("AAPL", Int1d, 1609459200, 1640995200)
+##   # Returns: https://query2.finance.yahoo.com/v8/finance/chart/AAPL?interval=1d&period1=1609459200&period2=1640995200
+##
+## **Internal Use:**
+## This module is primarily used internally by the retriever module.
+## Most users will not need to call these functions directly.
 ##
 
 import std/strutils
