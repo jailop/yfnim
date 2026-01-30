@@ -3,8 +3,8 @@
 ## This is a simple test to verify all formatters work correctly
 
 import std/[times, options, strutils]
-import yf/[types, formatters, utils]
-import ../src/yfnim/[types as ytypes, quote_types]
+import types, formatters, utils
+import ../yfnim/[types as ytypes, quote_types]
 
 # Create sample history data
 proc createSampleHistory(): ytypes.History =

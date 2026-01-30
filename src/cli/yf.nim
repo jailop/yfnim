@@ -4,7 +4,8 @@
 ## and command routing for the yf command-line tool.
 
 import std/[os, strutils]
-import yf/[types, config, utils]
+import types, config, utils
+import commands/[history, quote, compare, screen]
 
 const
   Version = "0.1.0"
@@ -229,16 +230,6 @@ proc printCommandHelp(cmd: CommandType) =
   of CmdVersion:
     printVersion()
 
-proc handleNotImplemented(cmdName: string, config: GlobalConfig) =
-  ## Temporary handler for commands not yet implemented
-  printError("Command '" & cmdName & "' is not yet implemented", config)
-  echo ""
-  echo "This command will be implemented in Phase 3 of development."
-  echo "For now, only --help and --version are functional."
-  echo ""
-  echo "Run 'yf help' for available commands."
-  quit(1)
-
 proc main*() =
   ## Main program entry point
   var config = newGlobalConfig()
@@ -269,7 +260,7 @@ proc main*() =
         if arg == "-h" or arg == "--help":
           printHistoryHelp()
           quit(0)
-      handleNotImplemented("history", config)
+      runHistory()
     
     of CmdQuote:
       # Check for command-specific help
@@ -278,7 +269,7 @@ proc main*() =
         if arg == "-h" or arg == "--help":
           printQuoteHelp()
           quit(0)
-      handleNotImplemented("quote", config)
+      runQuote()
     
     of CmdCompare:
       # Check for command-specific help
@@ -287,7 +278,7 @@ proc main*() =
         if arg == "-h" or arg == "--help":
           printCompareHelp()
           quit(0)
-      handleNotImplemented("compare", config)
+      runCompare()
     
     of CmdScreen:
       # Check for command-specific help
@@ -296,7 +287,7 @@ proc main*() =
         if arg == "-h" or arg == "--help":
           printScreenHelp()
           quit(0)
-      handleNotImplemented("screen", config)
+      runScreen()
   
   except CliError as e:
     printError(e.msg, config)
