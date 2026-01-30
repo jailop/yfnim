@@ -532,6 +532,51 @@ let sp500 = getQuote("^GSPC")
 echo "Index: ", sp500.symbol, " (", sp500.quoteType, ")"
 ```
 
+### Financial Analysis with Quote Data
+
+```nim
+import yfnim/quote_types
+import yfnim/quote_retriever
+
+# Get quote and check for financial metrics
+let quote = getQuote("AAPL")
+
+# Check if financial data is available
+if quote.hasFinancialMetrics():
+  echo "Financial metrics available for ", quote.symbol
+  
+  # Get P/E ratio
+  let pe = quote.getPERatio()
+  if pe > 0:
+    echo "P/E Ratio: ", pe
+  
+  # Get earnings per share
+  let eps = quote.getEPS()
+  if eps > 0:
+    echo "EPS: $", eps
+
+# Check for dividends
+if quote.hasDividends():
+  let divYield = quote.getDividendYield()
+  echo "Dividend Yield: ", divYield, "%"
+  
+  # Calculate yield on cost
+  let purchasePrice = 150.0  # Your purchase price
+  let yoc = quote.getYieldOnCost(purchasePrice)
+  echo "Yield on cost: ", yoc, "%"
+
+# Check position in 52-week range
+if quote.isNearHigh52Week(0.95):
+  echo "Trading near 52-week high!"
+elif quote.isNearLow52Week(1.10):
+  echo "Trading near 52-week low - potential buying opportunity?"
+
+# Get formatted metrics summary
+echo quote.formatMetrics()
+```
+
+**Note**: Financial metrics (P/E ratios, EPS, dividends, etc.) are defined as `Option[T]` fields because they require Yahoo Finance authentication to access. The Quote type includes these fields for completeness, but they will typically be `None` when using the public API.
+
 ## Error Handling
 
 The library uses specific exception types for different error scenarios:
