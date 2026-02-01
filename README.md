@@ -1,10 +1,12 @@
 # yfnim - Yahoo Finance Data Retriever for Nim
 
-A library and command-line tool for retrieving stock market data from Yahoo Finance. Written in Nim.
+A library and command-line tool for retrieving stock market data from
+Yahoo Finance. Written in Nim.
 
 ## Features
 
 ### Library
+
 - Historical OHLCV data retrieval
 - Real-time/delayed quote data
 - Multiple time intervals (1m, 5m, 15m, 30m, 1h, 1d, 1wk, 1mo)
@@ -13,6 +15,7 @@ A library and command-line tool for retrieving stock market data from Yahoo Fina
 - JSON serialization support
 
 ### CLI Tool
+
 - Unix-friendly command-line interface
 - Multiple output formats (table, CSV, JSON, TSV, minimal)
 - Stock screening with custom filter expressions
@@ -137,10 +140,10 @@ Quote data may be delayed 15-20 minutes depending on exchange and access level.
 
 ## Symbol Formats
 
-**US Stocks:** `AAPL`, `MSFT`, `GOOGL`  
-**International:** `SHOP.TO` (Toronto), `BP.L` (London), `6758.T` (Tokyo)  
-**Cryptocurrencies:** `BTC-USD`, `ETH-USD`  
-**Indices:** `^GSPC` (S&P 500), `^DJI` (Dow Jones)
+US Stocks: `AAPL`, `MSFT`, `GOOGL`  
+International: `SHOP.TO` (Toronto), `BP.L` (London), `6758.T` (Tokyo)  
+Cryptocurrencies: `BTC-USD`, `ETH-USD`  
+Indices: `^GSPC` (S&P 500), `^DJI` (Dow Jones)
 
 ## Error Handling
 

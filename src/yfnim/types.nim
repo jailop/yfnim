@@ -6,6 +6,9 @@
 ## - `Interval`_: Enum representing time intervals (1m, 1h, 1d, etc.)
 ## - `HistoryRecord`_: Single OHLCV data point with timestamp
 ## - `History`_: Time series of OHLCV data for a symbol
+## - `DividendAction`_: Dividend payment information
+## - `SplitAction`_: Stock split information
+## - `CorporateAction`_: Combined dividends and splits
 ##
 ## **Key Functions:**
 ## - `newHistory`_: Create empty History object
@@ -43,6 +46,7 @@
 
 import std/json
 import std/strutils
+import std/times
 
 type
   Interval* = enum
@@ -70,6 +74,23 @@ type
     symbol*: string               ## Stock ticker symbol
     interval*: Interval           ## Time interval
     data*: seq[HistoryRecord]     ## Sequence of OHLCV records
+  
+  DividendAction* = object
+    ## Dividend payment information
+    date*: DateTime  ## Dividend payment date
+    amount*: float64 ## Dividend amount per share
+  
+  SplitAction* = object
+    ## Stock split information
+    date*: DateTime  ## Split date
+    numerator*: int  ## Split numerator (e.g., 7 in 7:1 split)
+    denominator*: int ## Split denominator (e.g., 1 in 7:1 split)
+    splitRatio*: string ## String representation (e.g., "7:1")
+  
+  CorporateAction* = object
+    ## Combined dividends and splits for a symbol
+    dividends*: seq[DividendAction] ## Dividend history
+    splits*: seq[SplitAction]       ## Split history
 
 
 proc newHistory*(symbol: string, interval: Interval): History =
@@ -189,3 +210,37 @@ proc fromJson*(node: JsonNode, T: typedesc[History]): History =
   
   for recordNode in node["data"]:
     result.data.add(fromJson(recordNode, HistoryRecord))
+
+
+proc toJson*(dividend: DividendAction): JsonNode =
+  ## Converts a DividendAction to JSON
+  result = %*{
+    "date": dividend.date.format("yyyy-MM-dd"),
+    "amount": dividend.amount
+  }
+
+
+proc toJson*(split: SplitAction): JsonNode =
+  ## Converts a SplitAction to JSON
+  result = %*{
+    "date": split.date.format("yyyy-MM-dd"),
+    "numerator": split.numerator,
+    "denominator": split.denominator,
+    "splitRatio": split.splitRatio
+  }
+
+
+proc toJson*(actions: CorporateAction): JsonNode =
+  ## Converts a CorporateAction to JSON
+  var divsArray = newJArray()
+  for dividend in actions.dividends:
+    divsArray.add(dividend.toJson())
+  
+  var splitsArray = newJArray()
+  for split in actions.splits:
+    splitsArray.add(split.toJson())
+  
+  result = %*{
+    "dividends": divsArray,
+    "splits": splitsArray
+  }

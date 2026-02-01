@@ -67,12 +67,45 @@ type
     criteria*: ScreenCriteria   ## Screening criteria
     whereClause*: string        ## Custom screening expression
   
+  ActionsOptions* = object
+    ## Options specific to dividends/splits/actions commands
+    symbol*: string             ## Stock symbol to query
+    startDate*: string          ## Start date (YYYY-MM-DD or Unix timestamp)
+    endDate*: string            ## End date (YYYY-MM-DD or Unix timestamp)
+    lookback*: string           ## Lookback period (e.g., "1y", "5y", "max")
+  
+  IndicatorsOptions* = object
+    ## Options specific to indicators command
+    symbol*: string             ## Stock symbol to query
+    startDate*: string          ## Start date for historical data
+    endDate*: string            ## End date for historical data
+    lookback*: string           ## Lookback period (default: 1y)
+    interval*: Interval         ## Data interval (default: 1d)
+    sma*: seq[int]              ## SMA periods (e.g., @[20, 50, 200])
+    ema*: seq[int]              ## EMA periods (e.g., @[12, 26])
+    wma*: seq[int]              ## WMA periods
+    rsi*: int                   ## RSI period (0 = disabled)
+    macd*: bool                 ## Calculate MACD
+    stochastic*: bool           ## Calculate Stochastic
+    bb*: int                    ## Bollinger Bands period (0 = disabled)
+    bbStdDev*: float64          ## Bollinger Bands std dev multiplier
+    atr*: int                   ## ATR period (0 = disabled)
+    adx*: int                   ## ADX period (0 = disabled)
+    obv*: bool                  ## Calculate OBV
+    vwap*: bool                 ## Calculate VWAP
+    all*: bool                  ## Calculate all indicators with defaults
+  
   CommandType* = enum
     ## CLI commands
     CmdHistory = "history"
     CmdQuote = "quote"
     CmdCompare = "compare"
     CmdScreen = "screen"
+    CmdDividends = "dividends"
+    CmdSplits = "splits"
+    CmdActions = "actions"
+    CmdDownload = "download"
+    CmdIndicators = "indicators"
     CmdHelp = "help"
     CmdVersion = "version"
   
@@ -131,4 +164,38 @@ proc newScreenOptions*(): ScreenOptions =
     symbols: @[],
     criteria: CriteriaValue,
     whereClause: ""
+  )
+
+
+proc newActionsOptions*(): ActionsOptions =
+  ## Create an ActionsOptions with default values
+  ActionsOptions(
+    symbol: "",
+    startDate: "",
+    endDate: "",
+    lookback: "max"
+  )
+
+
+proc newIndicatorsOptions*(): IndicatorsOptions =
+  ## Create an IndicatorsOptions with default values
+  IndicatorsOptions(
+    symbol: "",
+    startDate: "",
+    endDate: "",
+    lookback: "1y",
+    interval: Int1d,
+    sma: @[],
+    ema: @[],
+    wma: @[],
+    rsi: 0,
+    macd: false,
+    stochastic: false,
+    bb: 0,
+    bbStdDev: 2.0,
+    atr: 0,
+    adx: 0,
+    obv: false,
+    vwap: false,
+    all: false
   )

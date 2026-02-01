@@ -1,21 +1,14 @@
-## Main CLI entry point for yfnim
-## 
-## This module provides the main program entry point, help system,
-## and command routing for the yf command-line tool.
-
 import std/[os, strutils]
 import types, config, utils
-import commands/[history, quote, compare, screen]
+import commands/[history, quote, compare, screen, actions, download, indicators]
 
 const
-  Version = "0.1.0"
+  Version = "0.2.0"
   ProgramName = "yf"
 
 proc printVersion() =
   ## Print version information
   echo ProgramName & " version " & Version
-  echo "Yahoo Finance data retriever for Nim"
-  echo "https://github.com/yourusername/yfnim"
 
 proc printMainHelp() =
   ## Print main help message with all commands and global options
@@ -30,6 +23,11 @@ COMMANDS:
     quote       Get current quote data for one or more symbols
     compare     Compare multiple stocks side-by-side
     screen      Screen multiple stocks based on criteria
+    dividends   Retrieve dividend history for a symbol
+    splits      Retrieve stock split history for a symbol
+    actions     Retrieve all corporate actions (dividends + splits)
+    download    Batch download historical data for multiple symbols
+    indicators  Calculate technical indicators for a symbol
     help        Show this help message
     version     Show version information
 
@@ -41,28 +39,6 @@ GLOBAL OPTIONS:
     -p, --precision <n>         Decimal precision for prices [default: 2]
     --date-format <format>      Date format (iso, us, unix, full) [default: iso]
     --debug                     Enable debug output
-
-EXAMPLES:
-    # Get 30 days of historical data
-    yf history AAPL --lookback 30d
-
-    # Get quotes for multiple symbols
-    yf quote AAPL MSFT GOOGL
-
-    # Compare stocks in CSV format
-    yf compare AAPL MSFT --format csv
-
-    # Screen stocks for value criteria
-    yf screen AAPL MSFT GOOGL --criteria value
-
-    # Export data to file
-    yf history AAPL --lookback 1y --format csv > aapl_history.csv
-
-    # Use in a pipeline
-    yf quote AAPL --format minimal | awk '{print $5}'
-
-For detailed help on a specific command, use:
-    yf <command> --help
 """
 
 proc printHistoryHelp() =
@@ -214,6 +190,183 @@ EXAMPLES:
     yf screen AAPL MSFT --criteria custom --where "pe < 20 and yield > 2"
 """
 
+proc printDividendsHelp() =
+  ## Print help for the dividends command
+  echo """
+yf dividends - Retrieve dividend history
+
+USAGE:
+    yf [GLOBAL_OPTIONS] dividends <SYMBOL> [OPTIONS]
+
+ARGUMENTS:
+    <SYMBOL>    Stock symbol to retrieve (e.g., AAPL, MSFT)
+
+OPTIONS:
+    --start <date>              Start date (YYYY-MM-DD or unix timestamp)
+    --end <date>                End date (YYYY-MM-DD, unix timestamp, or 'today')
+    --lookback <period>         Lookback period (e.g., 1y, 5y, max) [default: max]
+    -h, --help                  Show this help message
+
+EXAMPLES:
+    # Get all dividend history
+    yf dividends AAPL
+
+    # Get dividends for last 5 years
+    yf dividends AAPL --lookback 5y
+
+    # Export to CSV
+    yf dividends MSFT --format csv > msft_dividends.csv
+
+    # Get dividends for specific date range
+    yf dividends JNJ --start 2020-01-01 --end 2023-12-31
+"""
+
+proc printSplitsHelp() =
+  ## Print help for the splits command
+  echo """
+yf splits - Retrieve stock split history
+
+USAGE:
+    yf [GLOBAL_OPTIONS] splits <SYMBOL> [OPTIONS]
+
+ARGUMENTS:
+    <SYMBOL>    Stock symbol to retrieve (e.g., AAPL, TSLA)
+
+OPTIONS:
+    --start <date>              Start date (YYYY-MM-DD or unix timestamp)
+    --end <date>                End date (YYYY-MM-DD, unix timestamp, or 'today')
+    --lookback <period>         Lookback period (e.g., 1y, 5y, max) [default: max]
+    -h, --help                  Show this help message
+
+EXAMPLES:
+    # Get all split history
+    yf splits AAPL
+
+    # Get splits for last 10 years
+    yf splits TSLA --lookback 10y
+
+    # Export to JSON
+    yf splits NVDA --format json > nvda_splits.json
+"""
+
+proc printActionsHelp() =
+  ## Print help for the actions command
+  echo """
+yf actions - Retrieve all corporate actions (dividends + splits)
+
+USAGE:
+    yf [GLOBAL_OPTIONS] actions <SYMBOL> [OPTIONS]
+
+ARGUMENTS:
+    <SYMBOL>    Stock symbol to retrieve (e.g., AAPL, MSFT)
+
+OPTIONS:
+    --start <date>              Start date (YYYY-MM-DD or unix timestamp)
+    --end <date>                End date (YYYY-MM-DD, unix timestamp, or 'today')
+    --lookback <period>         Lookback period (e.g., 1y, 5y, max) [default: max]
+    -h, --help                  Show this help message
+
+EXAMPLES:
+    # Get all corporate actions
+    yf actions AAPL
+
+    # Get actions for last 5 years
+    yf actions MSFT --lookback 5y
+
+    # Export to CSV
+    yf actions GOOGL --format csv > googl_actions.csv
+"""
+
+proc printDownloadHelp() =
+  ## Print help for the download command
+  echo """
+yf download - Batch download historical data for multiple symbols
+
+USAGE:
+    yf [GLOBAL_OPTIONS] download <SYMBOL>... [OPTIONS]
+
+ARGUMENTS:
+    <SYMBOL>...     Stock symbols to download (space or comma-separated)
+
+OPTIONS:
+    --interval <interval>       Data interval (1d, 1wk, 1mo) [default: 1d]
+    --start <date>              Start date (YYYY-MM-DD or unix timestamp)
+    --end <date>                End date (YYYY-MM-DD, unix timestamp, or 'today')
+    --lookback <period>         Lookback period (e.g., 30d, 3mo, 1y)
+    -h, --help                  Show this help message
+
+EXAMPLES:
+    # Download 30 days for multiple symbols
+    yf download AAPL MSFT GOOGL --lookback 30d
+
+    # Download with comma-separated symbols
+    yf download AAPL,MSFT,GOOGL --lookback 1y
+
+    # Export to CSV
+    yf download AAPL MSFT --lookback 90d --format csv > data.csv
+
+    # Download from file list
+    cat symbols.txt | xargs yf download --lookback 1y
+"""
+
+proc printIndicatorsHelp() =
+  ## Print help for the indicators command
+  echo """
+yf indicators - Calculate technical indicators
+
+USAGE:
+    yf [GLOBAL_OPTIONS] indicators <SYMBOL> [OPTIONS]
+
+ARGUMENTS:
+    <SYMBOL>    Stock symbol to analyze (e.g., AAPL, MSFT)
+
+OPTIONS:
+    --lookback <period>         Lookback period (e.g., 1y, 6mo) [default: 1y]
+    --interval <interval>       Data interval (1d, 1wk, 1mo) [default: 1d]
+    --start <date>              Start date (YYYY-MM-DD or unix timestamp)
+    --end <date>                End date (YYYY-MM-DD, unix timestamp, or 'today')
+    
+    # Moving Averages
+    --sma <periods>             Simple Moving Averages (e.g., 20,50,200)
+    --ema <periods>             Exponential Moving Averages (e.g., 12,26)
+    --wma <periods>             Weighted Moving Averages
+    
+    # Momentum Indicators
+    --rsi [period]              Relative Strength Index [default: 14]
+    --macd                      MACD indicator
+    --stochastic                Stochastic Oscillator
+    
+    # Volatility Indicators
+    --bb [period]               Bollinger Bands [default: 20]
+    --atr [period]              Average True Range [default: 14]
+    
+    # Trend Indicators
+    --adx [period]              Average Directional Index [default: 14]
+    
+    # Volume Indicators
+    --obv                       On-Balance Volume
+    --vwap                      Volume Weighted Average Price
+    
+    --all                       Calculate all indicators with defaults
+    -h, --help                  Show this help message
+
+EXAMPLES:
+    # Calculate common moving averages
+    yf indicators AAPL --sma 20,50,200
+
+    # RSI and MACD for momentum analysis
+    yf indicators AAPL --rsi --macd
+
+    # Volatility analysis
+    yf indicators AAPL --bb --atr
+
+    # All indicators
+    yf indicators AAPL --all
+
+    # Custom lookback period
+    yf indicators AAPL --all --lookback 6mo
+"""
+
 proc printCommandHelp(cmd: CommandType) =
   ## Print help for a specific command
   case cmd
@@ -225,6 +378,16 @@ proc printCommandHelp(cmd: CommandType) =
     printCompareHelp()
   of CmdScreen:
     printScreenHelp()
+  of CmdDividends:
+    printDividendsHelp()
+  of CmdSplits:
+    printSplitsHelp()
+  of CmdActions:
+    printActionsHelp()
+  of CmdDownload:
+    printDownloadHelp()
+  of CmdIndicators:
+    printIndicatorsHelp()
   of CmdHelp:
     printMainHelp()
   of CmdVersion:
@@ -288,6 +451,51 @@ proc main*() =
           printScreenHelp()
           quit(0)
       runScreen()
+    
+    of CmdDividends:
+      # Check for command-specific help
+      for i in 1..paramCount():
+        let arg = paramStr(i)
+        if arg == "-h" or arg == "--help":
+          printDividendsHelp()
+          quit(0)
+      runDividends()
+    
+    of CmdSplits:
+      # Check for command-specific help
+      for i in 1..paramCount():
+        let arg = paramStr(i)
+        if arg == "-h" or arg == "--help":
+          printSplitsHelp()
+          quit(0)
+      runSplits()
+    
+    of CmdActions:
+      # Check for command-specific help
+      for i in 1..paramCount():
+        let arg = paramStr(i)
+        if arg == "-h" or arg == "--help":
+          printActionsHelp()
+          quit(0)
+      runActions()
+    
+    of CmdDownload:
+      # Check for command-specific help
+      for i in 1..paramCount():
+        let arg = paramStr(i)
+        if arg == "-h" or arg == "--help":
+          printDownloadHelp()
+          quit(0)
+      runDownload()
+    
+    of CmdIndicators:
+      # Check for command-specific help
+      for i in 1..paramCount():
+        let arg = paramStr(i)
+        if arg == "-h" or arg == "--help":
+          printIndicatorsHelp()
+          quit(0)
+      runIndicators()
   
   except CliError as e:
     printError(e.msg, config)
