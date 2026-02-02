@@ -140,6 +140,11 @@ yf
 
 # Get a simple quote to verify it works
 yf quote AAPL
+
+# Try other commands
+yf history AAPL --lookback 7d
+yf dividends AAPL
+yf indicators AAPL --sma 20,50
 ```
 
 If successful, you should see Apple's current stock price and market data.

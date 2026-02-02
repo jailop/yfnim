@@ -517,3 +517,11 @@ comm -12 <(tail -n +2 value.csv | cut -d, -f1 | sort) \
 - [Commands Reference](commands.md) - Complete command documentation
 - [Quick Start Guide](quick-start.md) - Basic usage
 - [Example: screening.sh](../../examples/cli/screening.sh) - Working examples
+
+## Related Commands
+
+For complementary analysis, also check out:
+- `yf compare` - Compare stocks side-by-side
+- `yf download` - Batch download screened symbols
+- `yf indicators` - Technical analysis on screened stocks
+- `yf dividends` - Dividend history for income screening

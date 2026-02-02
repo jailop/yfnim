@@ -1,7 +1,12 @@
 # yfnim - Yahoo Finance Data Retriever for Nim
 
-A library and command-line tool for retrieving stock market data from
-Yahoo Finance. Written in Nim.
+<div align="center">
+  <p>
+    <strong>A library and command-line tool for retrieving stock market data from Yahoo Finance. Written in Nim.</strong>
+  </p>
+</div>
+
+---
 
 ## Highlights
 
@@ -34,16 +39,6 @@ Yahoo Finance. Written in Nim.
 - Technical indicators (SMA, EMA, RSI, MACD, Bollinger Bands, ATR, and more)
 - In-memory caching
 - Works well with standard Unix tools
-
-## Installation
-
-```bash
-git clone https://codeberg.org/jailop/yfnim.git
-cd yfnim
-nimble build
-nimble install
-```
-
 
 ## Quick Start
 
@@ -95,12 +90,6 @@ yf dividends AAPL --lookback 5y
 # Check stock splits
 yf splits TSLA --lookback 10y
 
-# Get all corporate actions
-yf actions AAPL --lookback 5y
-
-# Batch download multiple symbols
-yf download AAPL MSFT GOOGL --lookback 30d
-
 # Calculate technical indicators
 yf indicators AAPL --sma 20,50,200 --rsi --macd
 
@@ -112,19 +101,19 @@ yf history AAPL --lookback 90d --format csv > data.csv
 
 ### Library
 
-- [Getting Started](docs/library/getting-started.md) - Installation and first program
-- [Historical Data Guide](docs/library/historical-data.md) - Working with OHLCV data
-- [Quote Data Guide](docs/library/quote-data.md) - Real-time quotes and market data
-- [API Documentation](docs/api/yfnim.html) - Complete API reference (generate with `nimble docs`)
+- [Getting Started](library/getting-started.md) - Installation and first program
+- [Historical Data Guide](library/historical-data.md) - Working with OHLCV data
+- [Quote Data Guide](library/quote-data.md) - Real-time quotes and market data
+- [API Documentation](api/index.md) - Complete API reference
 
 ### CLI Tool
 
-- [Installation Guide](docs/cli/installation.md) - Installation instructions
-- [Quick Start](docs/cli/quick-start.md) - Get started in 5 minutes
-- [Commands Reference](docs/cli/commands.md) - Complete command documentation
-- [Screening Guide](docs/cli/screening.md) - Advanced stock screening
+- [Installation Guide](cli/installation.md) - Installation instructions
+- [Quick Start](cli/quick-start.md) - Get started in 5 minutes
+- [Commands Reference](cli/commands.md) - Complete command documentation
+- [Screening Guide](cli/screening.md) - Advanced stock screening
 
-#### Available Commands
+## Available Commands
 
 | Command | Purpose |
 |---------|---------|
@@ -138,20 +127,18 @@ yf history AAPL --lookback 90d --format csv > data.csv
 | `download` | Batch download data for multiple symbols |
 | `indicators` | Calculate technical indicators (SMA, EMA, RSI, MACD, BB, ATR, etc.) |
 
-### Examples
+## Installation
 
-Library examples in [examples/library/](examples/library/):
-- `basic_history.nim` - Simple historical data retrieval
-- `batch_quotes.nim` - Batch quote retrieval
-- `error_handling.nim` - Error handling patterns
-- `custom_intervals.nim` - Using different time intervals
+### From Source
 
-CLI examples in [examples/cli/](examples/cli/):
-- `basic_usage.sh` - Common CLI usage patterns
-- `screening.sh` - Stock screening examples
-- `piping.sh` - Unix piping and integration
+```bash
+git clone https://codeberg.org/jailop/yfnim.git
+cd yfnim
+nimble build -d:ssl
+nimble install
+```
 
-## Building
+### Building
 
 ```bash
 # Build CLI tool
@@ -165,56 +152,6 @@ nimble docs
 
 # Run tests
 nimble test
-```
-
-## Usage Examples
-
-### Dividend Analysis
-
-```bash
-# Find high-yield dividend stocks
-yf screen JNJ PG KO PFE T VZ --criteria dividend
-
-# Get 10-year dividend history
-yf dividends JNJ --lookback 10y --format csv > jnj_dividends.csv
-```
-
-### Technical Trading
-
-```bash
-# Calculate moving averages and momentum indicators
-yf indicators AAPL --sma 20,50,200 --rsi --macd --format csv
-
-# Find stocks near 52-week high with strong momentum
-yf screen AAPL MSFT GOOGL NVDA --criteria custom \
-  --where "price >= 52whigh * 0.95 and volume > avgvolume * 1.5"
-```
-
-### Portfolio Monitoring
-
-```bash
-# Download historical data for portfolio
-yf download AAPL MSFT GOOGL AMZN TSLA --lookback 90d --format csv > portfolio.csv
-
-# Compare portfolio stocks
-yf compare AAPL MSFT GOOGL AMZN TSLA
-
-# Watch stocks in real-time
-watch -n 60 'yf quote AAPL MSFT GOOGL --refresh'
-```
-
-### Data Export & Analysis
-
-```bash
-# Export to CSV for Excel/spreadsheet analysis
-yf history AAPL --lookback 1y --format csv > aapl_2024.csv
-
-# Export to JSON for programming
-yf quote AAPL MSFT --format json | jq '.[] | {symbol, price, change}'
-
-# Pipe to Unix tools
-yf screen AAPL MSFT GOOGL AMZN TSLA --criteria growth --format minimal | \
-  xargs yf indicators --rsi --macd
 ```
 
 ## Data Limitations
@@ -232,10 +169,10 @@ Quote data may be delayed 15-20 minutes depending on exchange and access level.
 
 ## Symbol Formats
 
-US Stocks: `AAPL`, `MSFT`, `GOOGL`  
-International: `SHOP.TO` (Toronto), `BP.L` (London), `6758.T` (Tokyo)  
-Cryptocurrencies: `BTC-USD`, `ETH-USD`  
-Indices: `^GSPC` (S&P 500), `^DJI` (Dow Jones)
+- **US Stocks**: `AAPL`, `MSFT`, `GOOGL`  
+- **International**: `SHOP.TO` (Toronto), `BP.L` (London), `6758.T` (Tokyo)  
+- **Cryptocurrencies**: `BTC-USD`, `ETH-USD`  
+- **Indices**: `^GSPC` (S&P 500), `^DJI` (Dow Jones)
 
 ## Error Handling
 
@@ -251,7 +188,7 @@ Always wrap API calls in try-except blocks for production use.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file.
+MIT License - see [License](license.md) file.
 
 ## Disclaimer
 

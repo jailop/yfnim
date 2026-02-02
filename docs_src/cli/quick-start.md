@@ -13,7 +13,7 @@ yf quote AAPL
 
 ## Basic Commands
 
-The `yf` tool has four main commands:
+The `yf` tool has nine main commands:
 
 | Command | Purpose | Example |
 |---------|---------|---------|
@@ -21,6 +21,11 @@ The `yf` tool has four main commands:
 | `quote` | Get current price quotes | `yf quote AAPL MSFT` |
 | `compare` | Compare multiple stocks | `yf compare AAPL MSFT GOOGL` |
 | `screen` | Filter stocks by criteria | `yf screen AAPL MSFT --criteria value` |
+| `dividends` | Get dividend history | `yf dividends AAPL --lookback 5y` |
+| `splits` | Get stock split history | `yf splits TSLA --lookback 10y` |
+| `actions` | Get all corporate actions | `yf actions AAPL --lookback 5y` |
+| `download` | Batch download data | `yf download AAPL MSFT --lookback 30d` |
+| `indicators` | Calculate technical indicators | `yf indicators AAPL --rsi --macd` |
 
 ## 1. Get Current Quotes
 
@@ -101,6 +106,63 @@ yf screen AAPL MSFT GOOGL AMZN --criteria dividend  # High dividend
 # Custom filter
 yf screen AAPL MSFT GOOGL --criteria custom --where "price > 200"
 yf screen AAPL MSFT GOOGL --criteria custom --where "pe < 30 and yield > 1"
+```
+
+## 5. Get Dividend History
+
+Retrieve historical dividend payments:
+
+```bash
+# Get all dividend history
+yf dividends AAPL
+
+# Get dividends for last 5 years
+yf dividends JNJ --lookback 5y
+
+# Export to CSV
+yf dividends MSFT --format csv > dividends.csv
+```
+
+## 6. Check Stock Splits
+
+View historical stock split events:
+
+```bash
+# Get all split history
+yf splits AAPL
+
+# Get recent splits
+yf splits TSLA --lookback 5y
+
+# Export to JSON
+yf splits NVDA --format json
+```
+
+## 7. Batch Download Data
+
+Download data for multiple symbols efficiently:
+
+```bash
+# Download for multiple symbols
+yf download AAPL MSFT GOOGL --lookback 30d
+
+# Export to CSV
+yf download AAPL MSFT GOOGL --lookback 90d --format csv > data.csv
+```
+
+## 8. Technical Analysis
+
+Calculate technical indicators:
+
+```bash
+# Moving averages
+yf indicators AAPL --sma 20,50,200
+
+# Momentum indicators
+yf indicators AAPL --rsi --macd
+
+# All indicators
+yf indicators AAPL --all
 ```
 
 ## Output Formats
@@ -222,6 +284,15 @@ yf quote AAPL
 # Recent price history
 yf history AAPL --lookback 30d
 
+# Dividend history
+yf dividends AAPL --lookback 5y
+
+# Check for splits
+yf splits AAPL --lookback 10y
+
+# Technical indicators
+yf indicators AAPL --sma 50,200 --rsi
+
 # Compare to competitors
 yf compare AAPL MSFT GOOGL
 ```
@@ -232,6 +303,15 @@ yf compare AAPL MSFT GOOGL
 # Get data in different formats
 yf history AAPL --lookback 90d --format csv > data.csv
 yf quote AAPL MSFT GOOGL --format json > quotes.json
+
+# Download multiple symbols at once
+yf download AAPL MSFT GOOGL --lookback 30d --format csv > portfolio.csv
+
+# Export technical indicators
+yf indicators AAPL --all --format csv > indicators.csv
+
+# Export dividend history
+yf dividends AAPL --lookback 10y --format csv > dividends.csv
 ```
 
 ### Create a Watchlist
@@ -259,6 +339,9 @@ yf quote $(cat watchlist.txt)
 3. **Pipe to other tools** - all commands work well with grep, awk, jq
 4. **Use CSV/JSON for automation** - easier to parse than table format
 5. **Check symbol format** - international stocks may need exchange suffix (e.g., "SHOP.TO")
+6. **Use `download` for multiple symbols** - more efficient than multiple `history` commands
+7. **Combine indicators** - use multiple technical indicators for better analysis
+8. **Export for charting** - CSV output works well with spreadsheets and charting tools
 
 ## Common Issues
 
