@@ -11,12 +11,14 @@
 
 ## Features
 
-- Market data: Historical prices, real-time quotes, dividends, splits
-- Screening: Filter stocks with custom expressions
-- Technical analysis: Built-in indicators like RSI, MACD, Bollinger Bands, and others
-- Fast & efficient: Written in Nim, minimal dependencies
-- Unix-friendly: Pipes, CSV/JSON export, works with standard tools
-- Dual interface: Use as a library or standalone CLI tool
+- **Market data**: Historical prices, real-time quotes, dividends, splits
+- **Screening**: Filter stocks with custom expressions
+- **Technical analysis**: Built-in indicators like RSI, MACD, Bollinger Bands, and others
+- **Fast & efficient**: Written in Nim, minimal dependencies
+- **Unix-friendly**: Pipes, CSV/JSON export, stdin input, proper stderr logging
+- **Command abbreviations**: Use shortcuts like `yf h`, `yf q`, `yf comp`
+- **Dual interface**: Use as a library or standalone CLI tool
+- **Auto-generated help**: Built with cligen for consistent, colored help text
 
 ## Quick Start
 
@@ -27,25 +29,33 @@
 yf quote AAPL MSFT GOOGL
 
 # Get historical data
-yf history AAPL --lookback 30d
+yf history --symbol=AAPL --lookback=30d
 
 # Compare stocks
 yf compare AAPL MSFT GOOGL
 
 # Screen stocks
-yf screen AAPL MSFT GOOGL --criteria custom --where "pe < 20 and yield > 2"
+yf screen AAPL MSFT GOOGL --criteria=custom --where "pe < 20 and yield > 2"
 
 # Get dividend history
-yf dividends AAPL --lookback 5y
+yf dividends --symbol=AAPL --lookback=5y
 
 # Check stock splits
-yf splits TSLA --lookback 10y
+yf splits --symbol=TSLA --lookback=10y
 
 # Calculate technical indicators
-yf indicators AAPL --sma 20,50,200 --rsi --macd
+yf indicators --symbol=AAPL --sma=20 --sma=50 --sma=200 --rsi=14 --macd
 
 # Export to CSV
-yf history AAPL --lookback 90d --format csv > data.csv
+yf history --symbol=AAPL --lookback=90d --format=csv > data.csv
+
+# Use piped input
+cat symbols.txt | yf quote --read-stdin
+
+# Command abbreviations
+yf q AAPL              # quote
+yf h --symbol=AAPL     # history
+yf comp AAPL MSFT      # compare
 ```
 
 ### Library

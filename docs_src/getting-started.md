@@ -9,19 +9,27 @@ If you want to access market data from the terminal:
 **[CLI Quick Start Guide](cli/quick-start.md)**
 
 - Install the `yf` command-line tool
-- Learn basic commands
+- Learn basic commands with abbreviations
 - Export data to CSV/JSON
 - Screen stocks and analyze trends
+- Use piped input for batch processing
 
 ```bash
 # Get current quotes
 yf quote AAPL MSFT GOOGL
 
 # Get historical data
-yf history AAPL --lookback 30d
+yf history --symbol=AAPL --lookback=30d
 
 # Screen stocks
-yf screen AAPL MSFT --criteria value
+yf screen AAPL MSFT --criteria=value
+
+# Use command abbreviations
+yf q AAPL              # quote
+yf h --symbol=AAPL     # history
+
+# Pipe symbols from file
+cat symbols.txt | yf quote --read-stdin
 ```
 
 ## For Developers (Library)
