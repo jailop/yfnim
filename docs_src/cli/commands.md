@@ -22,7 +22,7 @@ These options work with all commands:
 
 | Option | Short | Description | Default |
 |--------|-------|-------------|---------|
-| `--format <type>` | `-f` | Output format: table, csv, json, tsv, minimal | table |
+| `--format=<type>` | `-f` | Output format: table, csv, json, tsv, minimal | table |
 | `--quiet` | `-q` | Suppress extra output | false |
 | `--no-header` | | Don't print column headers | false |
 | `--no-color` | | Disable colored output | false |
@@ -84,8 +84,8 @@ yf history <SYMBOL> [OPTIONS]
 
 | Option | Short | Description | Default | Example |
 |--------|-------|-------------|---------|---------|
-| `--interval <type>` | `-i` | Time interval | 1d | --interval 1h |
-| `--lookback <period>` | `-l` | Lookback period | 7d | --lookback 30d |
+| `--interval <type>` | `-i` | Time interval | 1d | --interval=1h |
+| `--lookback <period>` | `-l` | Lookback period | 7d | --lookback=30d |
 | `--start <date>` | `-s` | Start date | | --start 2024-01-01 |
 | `--end <date>` | `-e` | End date | today | --end 2024-12-31 |
 
@@ -125,22 +125,22 @@ Dates can be specified as:
 yf history AAPL
 
 # Last 30 days with daily interval
-yf history AAPL --lookback 30d
+yf history --symbol=AAPL --lookback=30d
 
 # Last 3 days with hourly data
-yf history AAPL --lookback 3d --interval 1h
+yf history --symbol=AAPL --lookback=3d --interval=1h
 
 # Specific date range
-yf history AAPL --start 2024-01-01 --end 2024-01-31
+yf history --symbol=AAPL --start 2024-01-01 --end 2024-01-31
 
 # Last year of weekly data
-yf history AAPL --lookback 1y --interval 1wk
+yf history --symbol=AAPL --lookback=1y --interval=1wk
 
 # Export to CSV
-yf history AAPL --lookback 30d --format csv > data.csv
+yf history --symbol=AAPL --lookback=30d --format=csv > data.csv
 
 # JSON format with no header
-yf history AAPL --lookback 7d --format json --no-header
+yf history --symbol=AAPL --lookback=7d --format=json --no-header
 ```
 
 ### Output Columns
@@ -187,10 +187,10 @@ yf quote AAPL
 yf quote AAPL MSFT GOOGL
 
 # CSV format for spreadsheet
-yf quote AAPL MSFT --format csv > quotes.csv
+yf quote AAPL MSFT --format=csv > quotes.csv
 
 # JSON for processing
-yf quote AAPL --format json | jq '.regularMarketPrice'
+yf quote AAPL --format=json | jq '.regularMarketPrice'
 
 # International stocks
 yf quote AAPL SHOP.TO BP.L
@@ -199,7 +199,7 @@ yf quote AAPL SHOP.TO BP.L
 yf quote BTC-USD ETH-USD
 
 # Minimal format (just values)
-yf quote AAPL --format minimal
+yf quote AAPL --format=minimal
 ```
 
 ### Output Fields
@@ -270,13 +270,13 @@ All global options apply. No command-specific options.
 yf compare AAPL MSFT GOOGL
 
 # Compare with different format
-yf compare AAPL MSFT GOOGL --format csv
+yf compare AAPL MSFT GOOGL --format=csv
 
 # Compare many stocks
 yf compare AAPL MSFT GOOGL AMZN TSLA NVDA META
 
 # Export comparison
-yf compare AAPL MSFT --format json > comparison.json
+yf compare AAPL MSFT --format=json > comparison.json
 ```
 
 ### Output Columns
@@ -303,7 +303,7 @@ Filter stocks based on criteria or custom expressions.
 ### Synopsis
 
 ```bash
-yf screen <SYMBOL> [SYMBOL...] --criteria <type> [OPTIONS]
+yf screen <SYMBOL> [SYMBOL...] --criteria=<type> [OPTIONS]
 ```
 
 ### Arguments
@@ -314,7 +314,7 @@ yf screen <SYMBOL> [SYMBOL...] --criteria <type> [OPTIONS]
 
 | Option | Short | Description | Required |
 |--------|-------|-------------|----------|
-| `--criteria <type>` | `-c` | Screening criteria type | Yes |
+| `--criteria=<type>` | `-c` | Screening criteria type | Yes |
 | `--where <expr>` | `-w` | Custom filter expression | With custom criteria |
 
 ### Predefined Criteria
@@ -343,7 +343,7 @@ yf screen <SYMBOL> [SYMBOL...] --criteria <type> [OPTIONS]
 
 ### Custom Expressions
 
-When using `--criteria custom`, provide a `--where` expression.
+When using `--criteria=custom`, provide a `--where` expression.
 
 #### Syntax
 
@@ -394,43 +394,43 @@ When using `--criteria custom`, provide a `--where` expression.
 
 ```bash
 # Predefined: Value stocks
-yf screen AAPL MSFT JPM KO PG --criteria value
+yf screen AAPL MSFT JPM KO PG --criteria=value
 
 # Predefined: Growth stocks
-yf screen AAPL MSFT GOOGL NVDA --criteria growth
+yf screen AAPL MSFT GOOGL NVDA --criteria=growth
 
 # Predefined: Dividend stocks
-yf screen T VZ XOM CVX --criteria dividend
+yf screen T VZ XOM CVX --criteria=dividend
 
 # Custom: Price filter
-yf screen AAPL MSFT GOOGL --criteria custom --where "price > 200"
+yf screen AAPL MSFT GOOGL --criteria=custom --where "price > 200"
 
 # Custom: Multiple conditions (AND)
-yf screen AAPL MSFT GOOGL JPM --criteria custom \
+yf screen AAPL MSFT GOOGL JPM --criteria=custom \
   --where "pe < 30 and yield > 1"
 
 # Custom: Multiple conditions (OR)
-yf screen AAPL MSFT GOOGL --criteria custom \
+yf screen AAPL MSFT GOOGL --criteria=custom \
   --where "changepercent > 2 or changepercent < -2"
 
 # Custom: Complex expression
-yf screen AAPL MSFT GOOGL AMZN TSLA --criteria custom \
+yf screen AAPL MSFT GOOGL AMZN TSLA --criteria=custom \
   --where "price > 100 and volume > 10000000 and changepercent > 0"
 
 # Custom: Value investing filter
-yf screen AAPL MSFT JPM BAC WFC --criteria custom \
+yf screen AAPL MSFT JPM BAC WFC --criteria=custom \
   --where "pe < 20 and yield > 2 and price > 50"
 
 # Custom: Near 52-week high
-yf screen AAPL MSFT GOOGL NVDA --criteria custom \
+yf screen AAPL MSFT GOOGL NVDA --criteria=custom \
   --where "price >= 52whigh * 0.95"
 
 # Export results
-yf screen AAPL MSFT GOOGL --criteria value --format csv > value_stocks.csv
+yf screen AAPL MSFT GOOGL --criteria=value --format=csv > value_stocks.csv
 
 # Get just the symbols that pass
-yf screen AAPL MSFT GOOGL AMZN TSLA --criteria custom \
-  --where "changepercent > 1" --format minimal
+yf screen AAPL MSFT GOOGL AMZN TSLA --criteria=custom \
+  --where "changepercent > 1" --format=minimal
 ```
 
 ### Expression Examples
@@ -488,7 +488,7 @@ yf dividends <SYMBOL> [OPTIONS]
 |--------|-------|-------------|---------|---------|
 | `--start <date>` | `-s` | Start date | | --start 2020-01-01 |
 | `--end <date>` | `-e` | End date | today | --end 2023-12-31 |
-| `--lookback <period>` | `-l` | Lookback period | max | --lookback 5y |
+| `--lookback <period>` | `-l` | Lookback period | max | --lookback=5y |
 
 ### Lookback Period Format
 
@@ -508,21 +508,21 @@ Examples: `1y`, `5y`, `10y`, `max`
 yf dividends AAPL
 
 # Get dividends for last 5 years
-yf dividends AAPL --lookback 5y
+yf dividends --symbol=AAPL --lookback=5y
 
 # Get dividends for specific date range
-yf dividends JNJ --start 2020-01-01 --end 2023-12-31
+yf dividends --symbol=JNJ --start 2020-01-01 --end 2023-12-31
 
 # Export to CSV
-yf dividends MSFT --format csv > msft_dividends.csv
+yf dividends --symbol=MSFT --format=csv > msft_dividends.csv
 
 # JSON format for processing
-yf dividends KO --format json
+yf dividends --symbol=KO --format=json
 
 # Multiple stocks (use a loop)
 for symbol in AAPL MSFT JNJ; do
   echo "=== $symbol ===" 
-  yf dividends $symbol --lookback 1y
+  yf dividends $symbol --lookback=1y
 done
 ```
 
@@ -558,7 +558,7 @@ yf splits <SYMBOL> [OPTIONS]
 |--------|-------|-------------|---------|---------|
 | `--start <date>` | `-s` | Start date | | --start 2020-01-01 |
 | `--end <date>` | `-e` | End date | today | --end 2023-12-31 |
-| `--lookback <period>` | `-l` | Lookback period | max | --lookback 10y |
+| `--lookback <period>` | `-l` | Lookback period | max | --lookback=10y |
 
 ### Examples
 
@@ -567,16 +567,16 @@ yf splits <SYMBOL> [OPTIONS]
 yf splits AAPL
 
 # Get splits for last 10 years
-yf splits TSLA --lookback 10y
+yf splits --symbol=TSLA --lookback=10y
 
 # Get splits for specific date range
-yf splits NVDA --start 2020-01-01 --end 2024-12-31
+yf splits --symbol=NVDA --start 2020-01-01 --end 2024-12-31
 
 # Export to JSON
-yf splits AAPL --format json > aapl_splits.json
+yf splits --symbol=AAPL --format=json > aapl_splits.json
 
 # Export to CSV
-yf splits GOOGL --format csv > googl_splits.csv
+yf splits --symbol=GOOGL --format=csv > googl_splits.csv
 ```
 
 ### Output Columns
@@ -617,7 +617,7 @@ yf actions <SYMBOL> [OPTIONS]
 |--------|-------|-------------|---------|---------|
 | `--start <date>` | `-s` | Start date | | --start 2020-01-01 |
 | `--end <date>` | `-e` | End date | today | --end 2023-12-31 |
-| `--lookback <period>` | `-l` | Lookback period | max | --lookback 5y |
+| `--lookback <period>` | `-l` | Lookback period | max | --lookback=5y |
 
 ### Examples
 
@@ -626,16 +626,16 @@ yf actions <SYMBOL> [OPTIONS]
 yf actions AAPL
 
 # Get actions for last 5 years
-yf actions MSFT --lookback 5y
+yf actions --symbol=MSFT --lookback=5y
 
 # Get actions for specific date range
-yf actions GOOGL --start 2020-01-01 --end 2023-12-31
+yf actions --symbol=GOOGL --start 2020-01-01 --end 2023-12-31
 
 # Export to CSV
-yf actions JNJ --format csv > jnj_actions.csv
+yf actions --symbol=JNJ --format=csv > jnj_actions.csv
 
 # JSON format
-yf actions KO --format json
+yf actions --symbol=KO --format=json
 ```
 
 ### Output Columns
@@ -669,8 +669,8 @@ yf download <SYMBOL> [SYMBOL...] [OPTIONS]
 
 | Option | Short | Description | Default | Example |
 |--------|-------|-------------|---------|---------|
-| `--interval <type>` | `-i` | Time interval | 1d | --interval 1wk |
-| `--lookback <period>` | `-l` | Lookback period | 30d | --lookback 1y |
+| `--interval <type>` | `-i` | Time interval | 1d | --interval=1wk |
+| `--lookback <period>` | `-l` | Lookback period | 30d | --lookback=1y |
 | `--start <date>` | `-s` | Start date | | --start 2024-01-01 |
 | `--end <date>` | `-e` | End date | today | --end 2024-12-31 |
 
@@ -682,25 +682,25 @@ Same as history command: `1d` (default), `1wk`, `1mo`
 
 ```bash
 # Download 30 days for multiple symbols
-yf download AAPL MSFT GOOGL --lookback 30d
+yf download AAPL MSFT GOOGL --lookback=30d
 
 # Download with comma-separated symbols
-yf download AAPL,MSFT,GOOGL --lookback 1y
+yf download AAPL,MSFT,GOOGL --lookback=1y
 
 # Download with specific date range
 yf download AAPL MSFT --start 2024-01-01 --end 2024-12-31
 
 # Export to CSV
-yf download AAPL MSFT GOOGL --lookback 90d --format csv > data.csv
+yf download AAPL MSFT GOOGL --lookback=90d --format=csv > data.csv
 
 # Weekly data
-yf download AAPL MSFT --lookback 1y --interval 1wk
+yf download AAPL MSFT --lookback=1y --interval=1wk
 
 # Download from file list
-cat symbols.txt | xargs yf download --lookback 1y
+cat symbols.txt | xargs yf download --lookback=1y
 
 # Download large portfolio
-yf download $(cat portfolio.txt) --lookback 30d --format csv > portfolio_data.csv
+yf download $(cat portfolio.txt) --lookback=30d --format=csv > portfolio_data.csv
 ```
 
 ### Output Format
@@ -711,7 +711,7 @@ The output contains data for all symbols with a `Symbol` column to identify each
 
 - More efficient than running `history` multiple times
 - All symbols are fetched with same date range and interval
-- Output includes all symbols combined (use `--format csv` to process)
+- Output includes all symbols combined (use `--format=csv` to process)
 - Failed symbols are logged but don't stop other downloads
 - Good for portfolio analysis and batch data collection
 
@@ -733,8 +733,8 @@ yf indicators <SYMBOL> [OPTIONS]
 
 | Option | Description | Default | Example |
 |--------|-------------|---------|---------|
-| `--lookback <period>` | Lookback period | 1y | --lookback 6mo |
-| `--interval <type>` | Data interval | 1d | --interval 1wk |
+| `--lookback <period>` | Lookback period | 1y | --lookback=6mo |
+| `--interval <type>` | Data interval | 1d | --interval=1wk |
 | `--start <date>` | Start date | | --start 2024-01-01 |
 | `--end <date>` | End date | today | --end 2024-12-31 |
 
@@ -784,40 +784,40 @@ yf indicators <SYMBOL> [OPTIONS]
 
 ```bash
 # Calculate common moving averages
-yf indicators AAPL --sma 20,50,200
+yf indicators --symbol=AAPL --sma 20,50,200
 
 # EMA for short-term trading
-yf indicators AAPL --ema 12,26
+yf indicators --symbol=AAPL --ema 12,26
 
 # RSI for momentum analysis
-yf indicators AAPL --rsi
+yf indicators --symbol=AAPL --rsi
 
 # RSI with custom period
-yf indicators AAPL --rsi 10
+yf indicators --symbol=AAPL --rsi 10
 
 # MACD and RSI together
-yf indicators AAPL --rsi --macd
+yf indicators --symbol=AAPL --rsi --macd
 
 # Bollinger Bands for volatility
-yf indicators AAPL --bb
+yf indicators --symbol=AAPL --bb
 
 # Bollinger Bands with custom period
-yf indicators AAPL --bb 30
+yf indicators --symbol=AAPL --bb 30
 
 # Multiple indicators
-yf indicators AAPL --sma 50,200 --rsi --macd --bb
+yf indicators --symbol=AAPL --sma 50,200 --rsi --macd --bb
 
 # All indicators with defaults
-yf indicators AAPL --all
+yf indicators --symbol=AAPL --all
 
 # Custom lookback period
-yf indicators AAPL --all --lookback 6mo
+yf indicators --symbol=AAPL --all --lookback=6mo
 
 # Export to CSV for charting
-yf indicators AAPL --sma 20,50,200 --rsi --macd --format csv > aapl_indicators.csv
+yf indicators --symbol=AAPL --sma 20,50,200 --rsi --macd --format=csv > aapl_indicators.csv
 
 # Weekly intervals
-yf indicators AAPL --sma 10,20,50 --interval 1wk --lookback 2y
+yf indicators --symbol=AAPL --sma 10,20,50 --interval=1wk --lookback=2y
 ```
 
 ### Indicator Descriptions
@@ -902,30 +902,30 @@ Output includes:
 
 ```bash
 # Export historical data to CSV
-yf history AAPL --lookback 90d --format csv > aapl_90d.csv
+yf history --symbol=AAPL --lookback=90d --format=csv > aapl_90d.csv
 
 # Export quotes to JSON
-yf quote AAPL MSFT GOOGL --format json > quotes.json
+yf quote AAPL MSFT GOOGL --format=json > quotes.json
 
 # Export comparison to TSV
-yf compare AAPL MSFT GOOGL --format tsv > comparison.tsv
+yf compare AAPL MSFT GOOGL --format=tsv > comparison.tsv
 ```
 
 ### Piping
 
 ```bash
 # Use with jq
-yf quote AAPL --format json | jq '.regularMarketPrice'
+yf quote AAPL --format=json | jq '.regularMarketPrice'
 
 # Use with awk
-yf history AAPL --lookback 30d --format csv | \
+yf history --symbol=AAPL --lookback=30d --format=csv | \
   awk -F, 'NR>1 && $5>220 {print $1, $5}'
 
 # Use with grep
 yf quote AAPL MSFT GOOGL | grep -i "market"
 
 # Sort by change percentage
-yf quote AAPL MSFT GOOGL AMZN --format csv | \
+yf quote AAPL MSFT GOOGL AMZN --format=csv | \
   tail -n +2 | sort -t, -k3 -nr
 ```
 
@@ -946,14 +946,14 @@ yf quote $(cat portfolio.txt)
 
 ```bash
 # Find value stocks and export
-yf screen AAPL MSFT JPM BAC GS --criteria value --format csv > value.csv
+yf screen AAPL MSFT JPM BAC GS --criteria=value --format=csv > value.csv
 
 # Find stocks up >1% today
-yf screen AAPL MSFT GOOGL AMZN TSLA --criteria custom \
-  --where "changepercent > 1" --format minimal
+yf screen AAPL MSFT GOOGL AMZN TSLA --criteria=custom \
+  --where "changepercent > 1" --format=minimal
 
 # Complex screening pipeline
-cat watchlist.txt | xargs yf quote --format csv | \
+cat watchlist.txt | xargs yf quote --format=csv | \
   tail -n +2 | awk -F, '$3 > 2' | cut -d, -f1
 ```
 
@@ -977,63 +977,63 @@ yf compare AAPL SHOP.TO BP.L 9984.T
 
 ```bash
 # Research dividend stocks
-yf dividends JNJ --lookback 10y
-yf dividends KO --lookback 10y --format csv
+yf dividends --symbol=JNJ --lookback=10y
+yf dividends --symbol=KO --lookback=10y --format=csv
 
 # Compare dividend histories
-yf dividends JNJ --lookback 5y > jnj_div.txt
-yf dividends PG --lookback 5y > pg_div.txt
+yf dividends --symbol=JNJ --lookback=5y > jnj_div.txt
+yf dividends --symbol=PG --lookback=5y > pg_div.txt
 
 # Export for spreadsheet analysis
-yf dividends AAPL MSFT JNJ KO --format csv > dividends.csv
+yf dividends --symbol=AAPL MSFT JNJ KO --format=csv > dividends.csv
 
 # Track dividend growth
-yf dividends AAPL --format json | jq '.[] | {date, dividend}'
+yf dividends --symbol=AAPL --format=json | jq '.[] | {date, dividend}'
 ```
 
 ### Corporate Actions Tracking
 
 ```bash
 # View all actions for a stock
-yf actions AAPL --lookback 10y
+yf actions --symbol=AAPL --lookback=10y
 
 # Check recent splits
-yf splits TSLA --lookback 5y
-yf splits NVDA --lookback 5y
+yf splits --symbol=TSLA --lookback=5y
+yf splits --symbol=NVDA --lookback=5y
 
 # Export actions timeline
-yf actions GOOGL --format csv > googl_actions.csv
+yf actions --symbol=GOOGL --format=csv > googl_actions.csv
 ```
 
 ### Portfolio Analysis
 
 ```bash
 # Download portfolio data
-yf download AAPL MSFT GOOGL AMZN --lookback 90d --format csv > portfolio.csv
+yf download AAPL MSFT GOOGL AMZN --lookback=90d --format=csv > portfolio.csv
 
 # Get indicators for multiple stocks
 for symbol in AAPL MSFT GOOGL; do
-  yf indicators $symbol --rsi --macd --format csv > ${symbol}_indicators.csv
+  yf indicators $symbol --rsi --macd --format=csv > ${symbol}_indicators.csv
 done
 
 # Batch technical analysis
-yf indicators AAPL --all --lookback 1y --format csv > aapl_full_analysis.csv
+yf indicators --symbol=AAPL --all --lookback=1y --format=csv > aapl_full_analysis.csv
 ```
 
 ### Technical Analysis
 
 ```bash
 # Quick trend check with moving averages
-yf indicators AAPL --sma 20,50,200
+yf indicators --symbol=AAPL --sma 20,50,200
 
 # Momentum analysis
-yf indicators AAPL --rsi --macd --stochastic
+yf indicators --symbol=AAPL --rsi --macd --stochastic
 
 # Volatility analysis
-yf indicators AAPL --bb --atr
+yf indicators --symbol=AAPL --bb --atr
 
 # Complete technical picture
-yf indicators AAPL --all --format json > aapl_technicals.json
+yf indicators --symbol=AAPL --all --format=json > aapl_technicals.json
 ```
 
 ## Error Messages

@@ -17,15 +17,17 @@ The `yf` tool has nine main commands:
 
 | Command | Purpose | Example |
 |---------|---------|---------|
-| `history` | Get historical price data | `yf history AAPL --lookback 30d` |
+| `history` | Get historical price data | `yf history --symbol=AAPL --lookback=30d` |
 | `quote` | Get current price quotes | `yf quote AAPL MSFT` |
 | `compare` | Compare multiple stocks | `yf compare AAPL MSFT GOOGL` |
-| `screen` | Filter stocks by criteria | `yf screen AAPL MSFT --criteria value` |
-| `dividends` | Get dividend history | `yf dividends AAPL --lookback 5y` |
-| `splits` | Get stock split history | `yf splits TSLA --lookback 10y` |
-| `actions` | Get all corporate actions | `yf actions AAPL --lookback 5y` |
-| `download` | Batch download data | `yf download AAPL MSFT --lookback 30d` |
-| `indicators` | Calculate technical indicators | `yf indicators AAPL --rsi --macd` |
+| `screen` | Filter stocks by criteria | `yf screen AAPL MSFT --criteria=value` |
+| `dividends` | Get dividend history | `yf dividends --symbol=AAPL --lookback=5y` |
+| `splits` | Get stock split history | `yf splits --symbol=TSLA --lookback=10y` |
+| `actions` | Get all corporate actions | `yf actions --symbol=AAPL --lookback=5y` |
+| `download` | Batch download data | `yf download AAPL MSFT --lookback=30d` |
+| `indicators` | Calculate technical indicators | `yf indicators --symbol=AAPL --rsi=14 --macd` |
+
+**Tip**: Use command abbreviations for faster typing: `yf h`, `yf q`, `yf comp`, etc.
 
 ## 1. Get Current Quotes
 
@@ -57,16 +59,16 @@ Retrieve historical price data:
 
 ```bash
 # Last 7 days (default)
-yf history AAPL --lookback 7d
+yf history --symbol=AAPL --lookback=7d
 
 # Last 30 days
-yf history AAPL --lookback 30d
+yf history --symbol=AAPL --lookback=30d
 
 # Last 6 months
-yf history AAPL --lookback 180d
+yf history --symbol=AAPL --lookback=180d
 
 # Specific date range
-yf history AAPL --start 2024-01-01 --end 2024-01-31
+yf history --symbol=AAPL --start 2024-01-01 --end 2024-01-31
 ```
 
 **Output:**
@@ -99,13 +101,13 @@ Filter stocks based on criteria:
 
 ```bash
 # Predefined criteria
-yf screen AAPL MSFT GOOGL AMZN --criteria value     # Value stocks
-yf screen AAPL MSFT GOOGL AMZN --criteria growth    # Growth stocks
-yf screen AAPL MSFT GOOGL AMZN --criteria dividend  # High dividend
+yf screen AAPL MSFT GOOGL AMZN --criteria=value     # Value stocks
+yf screen AAPL MSFT GOOGL AMZN --criteria=growth    # Growth stocks
+yf screen AAPL MSFT GOOGL AMZN --criteria=dividend  # High dividend
 
 # Custom filter
-yf screen AAPL MSFT GOOGL --criteria custom --where "price > 200"
-yf screen AAPL MSFT GOOGL --criteria custom --where "pe < 30 and yield > 1"
+yf screen AAPL MSFT GOOGL --criteria=custom --where "price > 200"
+yf screen AAPL MSFT GOOGL --criteria=custom --where "pe < 30 and yield > 1"
 ```
 
 ## 5. Get Dividend History
@@ -117,10 +119,10 @@ Retrieve historical dividend payments:
 yf dividends AAPL
 
 # Get dividends for last 5 years
-yf dividends JNJ --lookback 5y
+yf dividends --symbol=JNJ --lookback=5y
 
 # Export to CSV
-yf dividends MSFT --format csv > dividends.csv
+yf dividends --symbol=MSFT --format=csv > dividends.csv
 ```
 
 ## 6. Check Stock Splits
@@ -132,10 +134,10 @@ View historical stock split events:
 yf splits AAPL
 
 # Get recent splits
-yf splits TSLA --lookback 5y
+yf splits --symbol=TSLA --lookback=5y
 
 # Export to JSON
-yf splits NVDA --format json
+yf splits --symbol=NVDA --format=json
 ```
 
 ## 7. Batch Download Data
@@ -144,10 +146,10 @@ Download data for multiple symbols efficiently:
 
 ```bash
 # Download for multiple symbols
-yf download AAPL MSFT GOOGL --lookback 30d
+yf download AAPL MSFT GOOGL --lookback=30d
 
 # Export to CSV
-yf download AAPL MSFT GOOGL --lookback 90d --format csv > data.csv
+yf download AAPL MSFT GOOGL --lookback=90d --format=csv > data.csv
 ```
 
 ## 8. Technical Analysis
@@ -156,13 +158,13 @@ Calculate technical indicators:
 
 ```bash
 # Moving averages
-yf indicators AAPL --sma 20,50,200
+yf indicators --symbol=AAPL --sma 20,50,200
 
 # Momentum indicators
-yf indicators AAPL --rsi --macd
+yf indicators --symbol=AAPL --rsi --macd
 
 # All indicators
-yf indicators AAPL --all
+yf indicators --symbol=AAPL --all
 ```
 
 ## Output Formats
@@ -171,19 +173,19 @@ Change the output format with `--format`:
 
 ```bash
 # Table format (default, human-readable)
-yf quote AAPL --format table
+yf quote AAPL --format=table
 
 # CSV format (for spreadsheets)
-yf quote AAPL --format csv
+yf quote AAPL --format=csv
 
 # JSON format (for scripts/programs)
-yf quote AAPL --format json
+yf quote AAPL --format=json
 
 # TSV format (tab-separated)
-yf quote AAPL --format tsv
+yf quote AAPL --format=tsv
 
 # Minimal format (values only)
-yf quote AAPL --format minimal
+yf quote AAPL --format=minimal
 ```
 
 ## Common Use Cases
@@ -191,7 +193,7 @@ yf quote AAPL --format minimal
 ### Export to CSV File
 
 ```bash
-yf history AAPL --lookback 30d --format csv > aapl_data.csv
+yf history --symbol=AAPL --lookback=30d --format=csv > aapl_data.csv
 ```
 
 ### Monitor Multiple Stocks
@@ -204,17 +206,17 @@ yf quote AAPL MSFT GOOGL AMZN TSLA
 
 ```bash
 # Hourly data for last 3 days
-yf history AAPL --lookback 3d --interval 1h
+yf history --symbol=AAPL --lookback=3d --interval=1h
 
 # 5-minute data for today
-yf history AAPL --lookback 1d --interval 5m
+yf history --symbol=AAPL --lookback=1d --interval 5m
 ```
 
 ### Filter High-Volume Stocks
 
 ```bash
 yf screen AAPL MSFT GOOGL AMZN TSLA NVDA \
-  --criteria custom \
+  --criteria=custom \
   --where "volume > 50000000"
 ```
 
@@ -222,7 +224,7 @@ yf screen AAPL MSFT GOOGL AMZN TSLA NVDA \
 
 ```bash
 yf screen AAPL MSFT GOOGL AMZN TSLA \
-  --criteria custom \
+  --criteria=custom \
   --where "changepercent > 2"
 ```
 
@@ -232,14 +234,14 @@ Historical data supports different time intervals:
 
 ```bash
 # Intraday
-yf history AAPL --lookback 1d --interval 1m   # 1-minute bars
-yf history AAPL --lookback 5d --interval 5m   # 5-minute bars
-yf history AAPL --lookback 7d --interval 1h   # 1-hour bars
+yf history --symbol=AAPL --lookback=1d --interval 1m   # 1-minute bars
+yf history --symbol=AAPL --lookback=5d --interval 5m   # 5-minute bars
+yf history --symbol=AAPL --lookback=7d --interval=1h   # 1-hour bars
 
 # Daily and longer
-yf history AAPL --lookback 90d --interval 1d  # Daily bars (default)
-yf history AAPL --lookback 365d --interval 1wk  # Weekly bars
-yf history AAPL --lookback 1825d --interval 1mo # Monthly bars (5 years)
+yf history --symbol=AAPL --lookback=90d --interval=1d  # Daily bars (default)
+yf history --symbol=AAPL --lookback=365d --interval=1wk  # Weekly bars
+yf history --symbol=AAPL --lookback=1825d --interval 1mo # Monthly bars (5 years)
 ```
 
 **Note:** Shorter intervals have limited historical data availability (1-minute data is typically limited to ~7 days).
@@ -271,7 +273,7 @@ yf quote AAPL MSFT GOOGL
 
 # See which are up/down
 yf screen AAPL MSFT GOOGL AMZN TSLA \
-  --criteria custom \
+  --criteria=custom \
   --where "changepercent > 0"
 ```
 
@@ -282,16 +284,16 @@ yf screen AAPL MSFT GOOGL AMZN TSLA \
 yf quote AAPL
 
 # Recent price history
-yf history AAPL --lookback 30d
+yf history --symbol=AAPL --lookback=30d
 
 # Dividend history
-yf dividends AAPL --lookback 5y
+yf dividends --symbol=AAPL --lookback=5y
 
 # Check for splits
-yf splits AAPL --lookback 10y
+yf splits --symbol=AAPL --lookback=10y
 
 # Technical indicators
-yf indicators AAPL --sma 50,200 --rsi
+yf indicators --symbol=AAPL --sma 50,200 --rsi
 
 # Compare to competitors
 yf compare AAPL MSFT GOOGL
@@ -301,17 +303,17 @@ yf compare AAPL MSFT GOOGL
 
 ```bash
 # Get data in different formats
-yf history AAPL --lookback 90d --format csv > data.csv
-yf quote AAPL MSFT GOOGL --format json > quotes.json
+yf history --symbol=AAPL --lookback=90d --format=csv > data.csv
+yf quote AAPL MSFT GOOGL --format=json > quotes.json
 
 # Download multiple symbols at once
-yf download AAPL MSFT GOOGL --lookback 30d --format csv > portfolio.csv
+yf download AAPL MSFT GOOGL --lookback=30d --format=csv > portfolio.csv
 
 # Export technical indicators
-yf indicators AAPL --all --format csv > indicators.csv
+yf indicators --symbol=AAPL --all --format=csv > indicators.csv
 
 # Export dividend history
-yf dividends AAPL --lookback 10y --format csv > dividends.csv
+yf dividends --symbol=AAPL --lookback=10y --format=csv > dividends.csv
 ```
 
 ### Create a Watchlist
@@ -381,3 +383,89 @@ For issues or questions:
 - Check the [Commands Reference](commands.md)
 - See [Example Scripts](../../examples/cli/)
 - Report bugs: https://github.com/yourusername/yfnim/issues
+
+## New Features
+
+### Command Abbreviations
+
+Use any unique prefix to abbreviate commands:
+
+```bash
+yf h --symbol=AAPL --lookback=30d      # history
+yf q AAPL MSFT                         # quote
+yf comp AAPL MSFT GOOGL                # compare
+yf down AAPL MSFT --lookback=1y        # download
+yf div --symbol=JNJ --lookback=5y      # dividends
+yf ind --symbol=AAPL --rsi=14          # indicators
+```
+
+### Piped Input
+
+Read symbols from stdin for batch processing:
+
+```bash
+# From a file
+cat symbols.txt | yf quote --read-stdin
+
+# From echo
+echo "AAPL MSFT GOOGL" | yf quote --read-stdin
+
+# Mixed format (comma and space separated)
+echo -e "AAPL,MSFT\nGOOGL AMZN" | yf download --read-stdin --lookback=30d
+
+# From other commands
+grep "^A" symbols.txt | yf quote --read-stdin
+```
+
+### Output Redirection
+
+Separate data and messages for clean piping:
+
+```bash
+# Data goes to stdout, messages to stderr
+yf quote AAPL --verbose > data.csv 2> status.log
+
+# Silent mode (no messages)
+yf quote AAPL > data.csv
+
+# Only see errors
+yf quote AAPL 2>&1 | grep -i error
+
+# Chain commands
+yf quote AAPL MSFT --format=csv | awk -F, '$3 > 0 {print $1, $3}'
+```
+
+### Verbose Mode
+
+Use `--verbose` (or `-v`) to see progress messages:
+
+```bash
+# With progress messages
+yf download AAPL MSFT GOOGL --lookback=1y --verbose
+
+# Silent (default)
+yf download AAPL MSFT GOOGL --lookback=1y
+```
+
+## Help and Documentation
+
+Get help for any command:
+
+```bash
+# General help
+yf --help
+
+# Command-specific help
+yf history --help
+yf quote --help
+yf indicators --help
+
+# See all commands
+yf help
+```
+
+## Next Steps
+
+- [Complete Commands Reference](commands.md) - Detailed documentation for all commands
+- [Stock Screening Guide](screening.md) - Advanced filtering and screening
+- [Installation Guide](installation.md) - Build and install from source

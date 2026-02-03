@@ -21,7 +21,7 @@ Stock screening helps you filter a list of stocks based on specific criteria. Th
 ### Basic Usage
 
 ```bash
-yf screen <SYMBOLS...> --criteria <type> [--where <expression>]
+yf screen <SYMBOLS...> --criteria=<type> [--where <expression>]
 ```
 
 ## Predefined Criteria
@@ -37,7 +37,7 @@ Focuses on potentially undervalued stocks.
 - Dividend yield > 2%
 
 ```bash
-yf screen AAPL MSFT JPM BAC GS WFC KO PG --criteria value
+yf screen AAPL MSFT JPM BAC GS WFC KO PG --criteria=value
 ```
 
 **Use when:** Looking for stocks trading below market average valuation with dividend income.
@@ -50,7 +50,7 @@ Focuses on stocks with positive momentum.
 - Positive price change today (change% > 0)
 
 ```bash
-yf screen AAPL MSFT GOOGL AMZN TSLA NVDA --criteria growth
+yf screen AAPL MSFT GOOGL AMZN TSLA NVDA --criteria=growth
 ```
 
 **Use when:** Looking for stocks with upward momentum.
@@ -63,7 +63,7 @@ Focuses on income-generating stocks.
 - Dividend yield > 2%
 
 ```bash
-yf screen T VZ XOM CVX PFE JNJ --criteria dividend
+yf screen T VZ XOM CVX PFE JNJ --criteria=dividend
 ```
 
 **Use when:** Building an income portfolio.
@@ -77,7 +77,7 @@ Focuses on strong performers with high activity.
 - Volume above average
 
 ```bash
-yf screen AAPL MSFT GOOGL AMZN TSLA NVDA META --criteria momentum
+yf screen AAPL MSFT GOOGL AMZN TSLA NVDA META --criteria=momentum
 ```
 
 **Use when:** Looking for stocks with strong recent performance.
@@ -89,13 +89,13 @@ Custom expressions let you define your own screening logic.
 ### Basic Format
 
 ```bash
-yf screen SYMBOLS... --criteria custom --where "EXPRESSION"
+yf screen SYMBOLS... --criteria=custom --where "EXPRESSION"
 ```
 
 ### Simple Expression
 
 ```bash
-yf screen AAPL MSFT GOOGL --criteria custom --where "price > 200"
+yf screen AAPL MSFT GOOGL --criteria=custom --where "price > 200"
 ```
 
 This returns only stocks priced above $200.
@@ -151,13 +151,13 @@ You can use basic arithmetic:
 
 ```bash
 # Near 52-week high (within 5%)
-yf screen SYMBOLS --criteria custom --where "price >= 52whigh * 0.95"
+yf screen SYMBOLS --criteria=custom --where "price >= 52whigh * 0.95"
 
 # Volume above 2x average
-yf screen SYMBOLS --criteria custom --where "volume > avgvolume * 2"
+yf screen SYMBOLS --criteria=custom --where "volume > avgvolume * 2"
 
 # Price range check
-yf screen SYMBOLS --criteria custom --where "price > 52wlow * 1.2 and price < 52whigh * 0.9"
+yf screen SYMBOLS --criteria=custom --where "price > 52wlow * 1.2 and price < 52whigh * 0.9"
 ```
 
 ## Common Screening Strategies
@@ -169,17 +169,17 @@ Find undervalued stocks with good fundamentals.
 ```bash
 # Low P/E with dividends
 yf screen AAPL MSFT JPM BAC WFC GS \
-  --criteria custom \
+  --criteria=custom \
   --where "pe < 20 and yield > 2"
 
 # Cheap stocks with positive change
 yf screen AAPL MSFT JPM BAC WFC \
-  --criteria custom \
+  --criteria=custom \
   --where "pe < 15 and changepercent > 0 and price > 10"
 
 # Deep value with margin of safety
 yf screen AAPL MSFT JPM BAC WFC KO PG \
-  --criteria custom \
+  --criteria=custom \
   --where "pe < 12 and yield > 3 and price < 52whigh * 0.7"
 ```
 
@@ -190,17 +190,17 @@ Find stocks with strong momentum.
 ```bash
 # Strong daily gainers
 yf screen AAPL MSFT GOOGL AMZN TSLA NVDA \
-  --criteria custom \
+  --criteria=custom \
   --where "changepercent > 2"
 
 # Positive momentum with volume
 yf screen AAPL MSFT GOOGL AMZN TSLA \
-  --criteria custom \
+  --criteria=custom \
   --where "changepercent > 1 and volume > 10000000"
 
 # Near highs with momentum
 yf screen AAPL MSFT GOOGL NVDA AMD \
-  --criteria custom \
+  --criteria=custom \
   --where "price >= 52whigh * 0.9 and changepercent > 0"
 ```
 
@@ -211,17 +211,17 @@ Find dividend-paying stocks.
 ```bash
 # High-yield dividend stocks
 yf screen T VZ XOM CVX PFE JNJ KO PG \
-  --criteria custom \
+  --criteria=custom \
   --where "yield > 3"
 
 # Dividend growth
 yf screen T VZ XOM CVX PFE JNJ \
-  --criteria custom \
+  --criteria=custom \
   --where "yield > 2 and changepercent > 0"
 
 # Quality dividends
 yf screen T VZ XOM CVX JNJ KO PG \
-  --criteria custom \
+  --criteria=custom \
   --where "yield > 2 and pe < 25 and price > 50"
 ```
 
@@ -232,17 +232,17 @@ Find technical setups.
 ```bash
 # Breakout candidates (near 52-week high)
 yf screen AAPL MSFT GOOGL NVDA AMD \
-  --criteria custom \
+  --criteria=custom \
   --where "price >= 52whigh * 0.95"
 
 # Oversold (near 52-week low)
 yf screen AAPL MSFT GOOGL AMZN \
-  --criteria custom \
+  --criteria=custom \
   --where "price <= 52wlow * 1.1"
 
 # High volume breakout
 yf screen AAPL MSFT GOOGL TSLA NVDA \
-  --criteria custom \
+  --criteria=custom \
   --where "changepercent > 2 and volume > avgvolume * 1.5"
 ```
 
@@ -253,12 +253,12 @@ Find volatile stocks.
 ```bash
 # Large movers (up or down)
 yf screen AAPL MSFT GOOGL AMZN TSLA \
-  --criteria custom \
+  --criteria=custom \
   --where "changepercent > 3 or changepercent < -3"
 
 # High volume activity
 yf screen AAPL MSFT GOOGL AMZN TSLA NVDA \
-  --criteria custom \
+  --criteria=custom \
   --where "volume > 50000000"
 ```
 
@@ -269,17 +269,17 @@ Find stocks in specific price ranges.
 ```bash
 # Affordable stocks under $50
 yf screen AAPL MSFT GOOGL AMZN T VZ \
-  --criteria custom \
+  --criteria=custom \
   --where "price < 50 and price > 10"
 
 # Mid-cap range
 yf screen AAPL MSFT GOOGL AMZN \
-  --criteria custom \
+  --criteria=custom \
   --where "price > 100 and price < 300"
 
 # High-priced stocks
 yf screen AAPL MSFT GOOGL AMZN TSLA \
-  --criteria custom \
+  --criteria=custom \
   --where "price > 200"
 ```
 
@@ -302,7 +302,7 @@ META
 EOF
 
 # Screen the watchlist
-yf screen $(cat watchlist.txt) --criteria value
+yf screen $(cat watchlist.txt) --criteria=value
 ```
 
 ### 2. Combine Multiple Filters
@@ -311,7 +311,7 @@ Use `and` to make filters more selective:
 
 ```bash
 # Quality value stocks
-yf screen SYMBOLS --criteria custom \
+yf screen SYMBOLS --criteria=custom \
   --where "pe < 20 and yield > 2 and price > 50 and volume > 1000000"
 ```
 
@@ -321,7 +321,7 @@ Find stocks matching any of several criteria:
 
 ```bash
 # Value OR growth
-yf screen SYMBOLS --criteria custom \
+yf screen SYMBOLS --criteria=custom \
   --where "pe < 15 or changepercent > 3"
 ```
 
@@ -331,11 +331,11 @@ Save screening results for later analysis:
 
 ```bash
 # Export to CSV
-yf screen SYMBOLS --criteria value --format csv > value_stocks.csv
+yf screen SYMBOLS --criteria=value --format=csv > value_stocks.csv
 
 # Export to JSON
-yf screen SYMBOLS --criteria custom \
-  --where "pe < 20" --format json > results.json
+yf screen SYMBOLS --criteria=custom \
+  --where "pe < 20" --format=json > results.json
 ```
 
 ### 5. Automate Screening
@@ -349,15 +349,15 @@ Create scripts for regular screening:
 UNIVERSE="AAPL MSFT GOOGL AMZN TSLA NVDA META JPM BAC GS"
 
 echo "=== Value Stocks ==="
-yf screen $UNIVERSE --criteria value
+yf screen $UNIVERSE --criteria=value
 
 echo ""
 echo "=== Growth Stocks ==="
-yf screen $UNIVERSE --criteria growth
+yf screen $UNIVERSE --criteria=growth
 
 echo ""
 echo "=== Custom: Quality Growth ==="
-yf screen $UNIVERSE --criteria custom \
+yf screen $UNIVERSE --criteria=custom \
   --where "changepercent > 1 and volume > 10000000"
 ```
 
@@ -367,14 +367,14 @@ Start broad, then narrow down:
 
 ```bash
 # Step 1: Find all gainers
-yf screen SYMBOLS --criteria custom --where "changepercent > 0"
+yf screen SYMBOLS --criteria=custom --where "changepercent > 0"
 
 # Step 2: Add volume filter
-yf screen SYMBOLS --criteria custom \
+yf screen SYMBOLS --criteria=custom \
   --where "changepercent > 0 and volume > 5000000"
 
 # Step 3: Add valuation filter
-yf screen SYMBOLS --criteria custom \
+yf screen SYMBOLS --criteria=custom \
   --where "changepercent > 0 and volume > 5000000 and pe < 30"
 ```
 
@@ -385,10 +385,10 @@ Not all fields are available for all stocks:
 ```bash
 # Some stocks may not have P/E ratios
 # Be aware that these will be filtered out
-yf screen SYMBOLS --criteria custom --where "pe < 20"
+yf screen SYMBOLS --criteria=custom --where "pe < 20"
 
 # Check results manually if needed
-yf quote SYMBOL --format json | grep -i "trailingPE"
+yf quote SYMBOL --format=json | grep -i "trailingPE"
 ```
 
 ### 8. Combine with Other Tools
@@ -397,16 +397,16 @@ Integrate screening with Unix tools:
 
 ```bash
 # Screen and sort by change percentage
-yf screen SYMBOLS --criteria growth --format csv | \
+yf screen SYMBOLS --criteria=growth --format=csv | \
   tail -n +2 | sort -t, -k3 -nr
 
 # Screen and extract symbols only
-yf screen SYMBOLS --criteria value --format minimal | \
+yf screen SYMBOLS --criteria=value --format=minimal | \
   cut -d' ' -f1 > value_symbols.txt
 
 # Screen multiple times and compare
-yf screen SYMBOLS --criteria value --format csv > value.csv
-yf screen SYMBOLS --criteria growth --format csv > growth.csv
+yf screen SYMBOLS --criteria=value --format=csv > value.csv
+yf screen SYMBOLS --criteria=growth --format=csv > growth.csv
 comm -12 <(tail -n +2 value.csv | cut -d, -f1 | sort) \
          <(tail -n +2 growth.csv | cut -d, -f1 | sort)
 ```

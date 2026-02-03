@@ -142,9 +142,9 @@ yf
 yf quote AAPL
 
 # Try other commands
-yf history AAPL --lookback 7d
+yf history --symbol=AAPL --lookback=7d
 yf dividends AAPL
-yf indicators AAPL --sma 20,50
+yf indicators --symbol=AAPL --sma 20,50
 ```
 
 If successful, you should see Apple's current stock price and market data.

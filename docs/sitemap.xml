@@ -2,54 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://codeberg.org/jailop/yfnim/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/changelog/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/getting-started/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/installation/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/license/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/api/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
+    </url>
+    <url>
+         <loc>https://codeberg.org/jailop/yfnim/cli/command-reference/</loc>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/cli/commands/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/cli/installation/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/cli/quick-start/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/cli/screening/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/library/getting-started/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/library/historical-data/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
     <url>
          <loc>https://codeberg.org/jailop/yfnim/library/quote-data/</loc>
-         <lastmod>2026-02-02</lastmod>
+         <lastmod>2026-02-03</lastmod>
     </url>
 </urlset>
