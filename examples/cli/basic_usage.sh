@@ -18,9 +18,9 @@ fi
 
 echo "1. Get Historical Data (Last 7 Days)"
 echo "--------------------------------------"
-echo "Command: yf history AAPL --lookback 7d"
+echo "Command: yf history --symbol=AAPL --lookback=7d"
 echo ""
-yf history AAPL --lookback 7d
+yf history --symbol=AAPL --lookback=7d
 echo ""
 echo "Press Enter to continue..."
 read
@@ -28,9 +28,9 @@ read
 echo ""
 echo "2. Get Historical Data with Custom Date Range"
 echo "--------------------------------------"
-echo "Command: yf history MSFT --start 2024-01-01 --end 2024-01-31"
+echo "Command: yf history --symbol=MSFT --start=2024-01-01 --end=2024-01-31"
 echo ""
-yf history MSFT --start 2024-01-01 --end 2024-01-31
+yf history --symbol=MSFT --start=2024-01-01 --end=2024-01-31
 echo ""
 echo "Press Enter to continue..."
 read
@@ -68,9 +68,9 @@ read
 echo ""
 echo "6. Export to CSV"
 echo "--------------------------------------"
-echo "Command: yf history AAPL --lookback 30d --format csv > aapl_30d.csv"
+echo "Command: yf history --symbol=AAPL --lookback=30d --format=csv > aapl_30d.csv"
 echo ""
-yf history AAPL --lookback 30d --format csv > aapl_30d.csv
+yf history --symbol=AAPL --lookback=30d --format=csv > aapl_30d.csv
 echo "Saved to: aapl_30d.csv"
 ls -lh aapl_30d.csv
 echo ""
@@ -83,9 +83,9 @@ read
 echo ""
 echo "7. Export to JSON"
 echo "--------------------------------------"
-echo "Command: yf quote AAPL MSFT --format json > quotes.json"
+echo "Command: yf quote AAPL MSFT --format=json > quotes.json"
 echo ""
-yf quote AAPL MSFT --format json > quotes.json
+yf quote AAPL MSFT --format=json > quotes.json
 echo "Saved to: quotes.json"
 cat quotes.json
 echo ""
@@ -97,16 +97,16 @@ echo "8. Different Output Formats"
 echo "--------------------------------------"
 echo ""
 echo "8a. Table format (default):"
-yf quote TSLA --format table
+yf quote TSLA --format=table
 echo ""
 echo "8b. CSV format:"
-yf quote TSLA --format csv
+yf quote TSLA --format=csv
 echo ""
 echo "8c. TSV format (good for piping):"
-yf quote TSLA --format tsv
+yf quote TSLA --format=tsv
 echo ""
 echo "8d. Minimal format (just values):"
-yf quote TSLA --format minimal
+yf quote TSLA --format=minimal
 echo ""
 echo "Press Enter to continue..."
 read
@@ -116,10 +116,10 @@ echo "9. Using Different Intervals"
 echo "--------------------------------------"
 echo ""
 echo "9a. Hourly data (last 3 days):"
-yf history NVDA --lookback 3d --interval 1h | head -15
+yf history --symbol=NVDA --lookback=3d --interval=1h | head -15
 echo ""
 echo "9b. Weekly data (last 6 months):"
-yf history NVDA --lookback 180d --interval 1wk
+yf history --symbol=NVDA --lookback=180d --interval=1wk
 echo ""
 echo "Press Enter to continue..."
 read
@@ -170,9 +170,9 @@ NVDA
 META
 EOF
 
-echo "Command: yf quote \$(cat watchlist.txt)"
+echo "Command: cat watchlist.txt | yf quote --read-stdin"
 echo ""
-yf quote $(cat watchlist.txt)
+cat watchlist.txt | yf quote --read-stdin
 rm -f watchlist.txt
 echo ""
 echo "Press Enter to continue..."

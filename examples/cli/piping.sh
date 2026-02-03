@@ -33,15 +33,15 @@ echo ""
 echo "2. Pipe to head/tail (Limit Output)"
 echo "--------------------------------------"
 echo "Get first 10 days of history:"
-echo "Command: yf history AAPL --lookback 30d | head -12"
+echo "Command: yf history --symbol=AAPL --lookback=30d | head -12"
 echo "(12 lines = header + 10 data rows)"
 echo ""
-yf history AAPL --lookback 30d | head -12
+yf history --symbol=AAPL --lookback=30d | head -12
 echo ""
 echo "Get last 5 days:"
-echo "Command: yf history AAPL --lookback 30d | tail -5"
+echo "Command: yf history --symbol=AAPL --lookback=30d | tail -5"
 echo ""
-yf history AAPL --lookback 30d | tail -5
+yf history --symbol=AAPL --lookback=30d | tail -5
 echo ""
 echo "Press Enter to continue..."
 read
@@ -50,9 +50,9 @@ echo ""
 echo "3. Pipe to wc (Count Lines/Words)"
 echo "--------------------------------------"
 echo "Count how many days of data returned:"
-echo "Command: yf history AAPL --lookback 365d --format csv | wc -l"
+echo "Command: yf history --symbol=AAPL --lookback=365d --format=csv | wc -l"
 echo ""
-days=$(yf history AAPL --lookback 365d --format csv | wc -l)
+days=$(yf history --symbol=AAPL --lookback=365d --format=csv | wc -l)
 echo "Total lines: $days (includes 1 header line)"
 echo "Trading days: $((days - 1))"
 echo ""
@@ -66,9 +66,9 @@ echo ""
 echo "4. Extract Specific Columns with awk"
 echo "--------------------------------------"
 echo "Extract just date and closing price:"
-echo "Command: yf history AAPL --lookback 7d --format csv | awk -F, '{print \$1, \$5}'"
+echo "Command: yf history --symbol=AAPL --lookback=7d --format=csv | awk -F, '{print \$1, \$5}'"
 echo ""
-yf history AAPL --lookback 7d --format csv | awk -F, '{print $1, $5}'
+yf history --symbol=AAPL --lookback=7d --format=csv | awk -F, '{print $1, $5}'
 echo ""
 echo "Press Enter to continue..."
 read
@@ -77,9 +77,9 @@ echo ""
 echo "5. Filter by Value with awk"
 echo "--------------------------------------"
 echo "Find days where closing price > 220:"
-echo "Command: yf history AAPL --lookback 30d --format csv | awk -F, 'NR>1 && \$5>220'"
+echo "Command: yf history --symbol=AAPL --lookback=30d --format=csv | awk -F, 'NR>1 && \$5>220'"
 echo ""
-yf history AAPL --lookback 30d --format csv | awk -F, 'NR>1 && $5>220'
+yf history --symbol=AAPL --lookback=30d --format=csv | awk -F, 'NR>1 && $5>220'
 echo ""
 echo "Press Enter to continue..."
 read
@@ -88,13 +88,13 @@ echo ""
 echo "6. Calculate with awk"
 echo "--------------------------------------"
 echo "Calculate average closing price:"
-echo "Command: yf history AAPL --lookback 30d --format csv | awk -F, 'NR>1 {sum+=\$5; count++} END {print \"Average:\", sum/count}'"
+echo "Command: yf history --symbol=AAPL --lookback=30d --format=csv | awk -F, 'NR>1 {sum+=\$5; count++} END {print \"Average:\", sum/count}'"
 echo ""
-yf history AAPL --lookback 30d --format csv | awk -F, 'NR>1 {sum+=$5; count++} END {print "Average:", sum/count}'
+yf history --symbol=AAPL --lookback=30d --format=csv | awk -F, 'NR>1 {sum+=$5; count++} END {print "Average:", sum/count}'
 echo ""
 echo "Find highest close:"
 echo ""
-yf history AAPL --lookback 30d --format csv | awk -F, 'NR>1 {if($5>max) max=$5} END {print "Highest close:", max}'
+yf history --symbol=AAPL --lookback=30d --format=csv | awk -F, 'NR>1 {if($5>max) max=$5} END {print "Highest close:", max}'
 echo ""
 echo "Press Enter to continue..."
 read
@@ -110,9 +110,9 @@ else
     echo "7. Extract Fields with jq"
     echo "--------------------------------------"
     echo "Get just the symbol and price:"
-    echo "Command: yf quote AAPL --format json | jq '.symbol, .regularMarketPrice'"
+    echo "Command: yf quote AAPL --format=json | jq '.symbol, .regularMarketPrice'"
     echo ""
-    yf quote AAPL --format json | jq '.symbol, .regularMarketPrice'
+    yf quote AAPL --format=json | jq '.symbol, .regularMarketPrice'
     echo ""
     echo "Press Enter to continue..."
     read
@@ -121,9 +121,9 @@ else
     echo "8. Format JSON Output"
     echo "--------------------------------------"
     echo "Pretty-print with custom format:"
-    echo "Command: yf quote AAPL MSFT --format json | jq '{symbol: .symbol, price: .regularMarketPrice, change: .regularMarketChangePercent}'"
+    echo "Command: yf quote AAPL MSFT --format=json | jq '{symbol: .symbol, price: .regularMarketPrice, change: .regularMarketChangePercent}'"
     echo ""
-    yf quote AAPL MSFT --format json | jq '{symbol: .symbol, price: .regularMarketPrice, change: .regularMarketChangePercent}'
+    yf quote AAPL MSFT --format=json | jq '{symbol: .symbol, price: .regularMarketPrice, change: .regularMarketChangePercent}'
     echo ""
     echo "Press Enter to continue..."
     read
@@ -132,9 +132,9 @@ else
     echo "9. Filter JSON with jq"
     echo "--------------------------------------"
     echo "Get quotes only if change > 0:"
-    echo "Command: yf quote AAPL MSFT GOOGL TSLA --format json | jq 'select(.regularMarketChangePercent > 0)'"
+    echo "Command: yf quote AAPL MSFT GOOGL TSLA --format=json | jq 'select(.regularMarketChangePercent > 0)'"
     echo ""
-    yf quote AAPL MSFT GOOGL TSLA --format json | jq 'select(.regularMarketChangePercent > 0)'
+    yf quote AAPL MSFT GOOGL TSLA --format=json | jq 'select(.regularMarketChangePercent > 0)'
     echo ""
     echo "Press Enter to continue..."
     read
@@ -151,7 +151,7 @@ echo ""
 echo "Symbol  Price   Change%"
 echo "------------------------"
 for symbol in AAPL MSFT GOOGL TSLA; do
-    yf quote $symbol --format minimal | awk -v sym=$symbol '{printf "%-7s $%-7.2f %+.2f%%\n", sym, $1, $2}'
+    yf quote $symbol --format=minimal | awk -v sym=$symbol '{printf "%-7s $%-7.2f %+.2f%%\n", sym, $1, $2}'
 done
 echo ""
 echo "Press Enter to continue..."
@@ -164,7 +164,7 @@ echo "Download 30 days of data for multiple stocks:"
 echo ""
 for symbol in AAPL MSFT GOOGL; do
     echo "Downloading $symbol..."
-    yf history $symbol --lookback 30d --format csv > "${symbol}_30d.csv"
+    yf history $symbol --lookback=30d --format=csv > "${symbol}_30d.csv"
     lines=$(wc -l < "${symbol}_30d.csv")
     echo "  Saved ${lines} lines to ${symbol}_30d.csv"
 done
@@ -181,9 +181,9 @@ echo "12. Find Best Performers"
 echo "--------------------------------------"
 echo "Get quotes and sort by change percentage:"
 echo ""
-echo "Command: yf quote AAPL MSFT GOOGL AMZN TSLA NVDA --format csv | tail -n +2 | sort -t, -k3 -nr"
+echo "Command: yf quote AAPL MSFT GOOGL AMZN TSLA NVDA --format=csv | tail -n +2 | sort -t, -k3 -nr"
 echo ""
-yf quote AAPL MSFT GOOGL AMZN TSLA NVDA --format csv | tail -n +2 | sort -t, -k3 -nr
+yf quote AAPL MSFT GOOGL AMZN TSLA NVDA --format=csv | tail -n +2 | sort -t, -k3 -nr
 echo ""
 echo "Press Enter to continue..."
 read
@@ -199,10 +199,10 @@ echo "Daily Market Report - $(date +%Y-%m-%d)"
 echo "========================================"
 echo ""
 echo "Tech Leaders:"
-yf quote AAPL MSFT GOOGL AMZN --format table
+yf quote AAPL MSFT GOOGL AMZN --format=table
 echo ""
 echo "Top Gainers (from watchlist):"
-yf quote AAPL MSFT GOOGL AMZN TSLA NVDA META --format csv | \
+yf quote AAPL MSFT GOOGL AMZN TSLA NVDA META --format=csv | \
     tail -n +2 | sort -t, -k3 -nr | head -3 | \
     awk -F, '{printf "%s: +%.2f%%\n", $1, $3}'
 echo ""
@@ -219,9 +219,9 @@ echo ""
 echo "14. Export to Different Formats"
 echo "--------------------------------------"
 echo "CSV to TSV conversion:"
-echo "Command: yf history AAPL --lookback 7d --format csv | tr ',' '\t'"
+echo "Command: yf history --symbol=AAPL --lookback=7d --format=csv | tr ',' '\t'"
 echo ""
-yf history AAPL --lookback 7d --format csv | tr ',' '\t' | head -5
+yf history --symbol=AAPL --lookback=7d --format=csv | tr ',' '\t' | head -5
 echo ""
 echo "Press Enter to continue..."
 read
@@ -233,11 +233,11 @@ echo "Find stocks with price > \$200 and volume > 10M:"
 echo ""
 echo "Command:"
 echo "for s in AAPL MSFT GOOGL AMZN TSLA NVDA; do"
-echo "  yf quote \$s --format csv | tail -1"
+echo "  yf quote \$s --format=csv | tail -1"
 echo "done | awk -F, '\$2>200 && \$6>10000000 {print \$1, \"Price:\", \$2, \"Volume:\", \$6}'"
 echo ""
 for s in AAPL MSFT GOOGL AMZN TSLA NVDA; do
-  yf quote $s --format csv 2>/dev/null | tail -1
+  yf quote $s --format=csv 2>/dev/null | tail -1
 done | awk -F, '$2>200 && $6>10000000 {print $1, "Price:", $2, "Volume:", $6}'
 echo ""
 echo "Press Enter to continue..."
@@ -259,7 +259,7 @@ WATCHLIST="AAPL MSFT GOOGL AMZN TSLA"
 echo "Checking for significant moves (threshold: ${THRESHOLD}%)..."
 
 for symbol in $WATCHLIST; do
-    data=$(yf quote $symbol --format minimal 2>/dev/null)
+    data=$(yf quote $symbol --format=minimal 2>/dev/null)
     if [ $? -eq 0 ]; then
         price=$(echo $data | awk '{print $1}')
         change=$(echo $data | awk '{print $2}')
@@ -301,7 +301,7 @@ CREATE TABLE IF NOT EXISTS history (
 EOF
     
     # Import data
-    yf history AAPL --lookback 30d --format csv | tail -n +2 | sqlite3 stocks.db
+    yf history --symbol=AAPL --lookback=30d --format=csv | tail -n +2 | sqlite3 stocks.db
     
     echo "Query data:"
     echo "SELECT date, close FROM history WHERE close > 220 ORDER BY date DESC LIMIT 5;" | sqlite3 -header stocks.db
@@ -324,7 +324,7 @@ LOGFILE="price_history.log"
 
 while true; do
     timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-    price=$(yf quote AAPL --format minimal 2>/dev/null | awk '{print $1}')
+    price=$(yf quote AAPL --format=minimal 2>/dev/null | awk '{print $1}')
     if [ ! -z "$price" ]; then
         echo "$timestamp,$price" >> $LOGFILE
         echo "Logged: $timestamp - \$$price"
@@ -359,7 +359,7 @@ echo ""
 echo "Formatting:"
 echo "  yf ... | column -t -s,            # Format as table"
 echo "  yf ... | tr ',' '\t'              # Convert to TSV"
-echo "  yf ... --format json | jq         # Process JSON"
+echo "  yf ... --format=json | jq         # Process JSON"
 echo ""
 echo "For more information:"
 echo "  - Command reference: docs/cli/commands.md"

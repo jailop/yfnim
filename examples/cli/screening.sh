@@ -167,11 +167,11 @@ echo ""
 echo "13. Practical Screening Workflow"
 echo "--------------------------------------"
 echo "Step 1: Find value stocks"
-yf screen $POPULAR_STOCKS --criteria value --format csv > value_stocks.csv
+yf screen $POPULAR_STOCKS --criteria value --format=csv > value_stocks.csv
 echo "Saved to: value_stocks.csv"
 echo ""
 echo "Step 2: Find growth stocks"
-yf screen $TECH_STOCKS --criteria growth --format csv > growth_stocks.csv
+yf screen $TECH_STOCKS --criteria growth --format=csv > growth_stocks.csv
 echo "Saved to: growth_stocks.csv"
 echo ""
 echo "Step 3: Compare the lists"
@@ -189,10 +189,10 @@ echo ""
 echo "14. Screening with Output Formats"
 echo "--------------------------------------"
 echo "JSON format (for programmatic processing):"
-yf screen AAPL MSFT GOOGL --criteria value --format json | head -20
+yf screen AAPL MSFT GOOGL --criteria value --format=json | head -20
 echo ""
 echo "Minimal format (just symbols):"
-yf screen $TECH_STOCKS --criteria growth --format minimal
+yf screen $TECH_STOCKS --criteria growth --format=minimal
 echo ""
 echo "Press Enter to continue..."
 read
