@@ -3,7 +3,7 @@ author        = "Jaime Lopez"
 description   = "A Yahoo Finance historical data retriever with support for multiple intervals"
 license       = "MIT"
 srcDir        = "src"
-bin           = @["yf"]
+bin           = @["yf", "yf2"]
 binDir        = "bin"
 installExt    = @["nim"]
 
