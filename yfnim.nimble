@@ -8,14 +8,15 @@ binDir        = "bin"
 installExt    = @["nim"]
 
 requires "nim >= 2.2.6"
+requires "cligen >= 1.9.6"
 
 task examples, "Compile all example programs":
-  exec "nim c -d:ssl -p:src examples/basic_usage.nim"
-  exec "nim c -d:ssl -p:src examples/multiple_symbols.nim"
-  exec "nim c -d:ssl -p:src examples/json_export.nim"
-  exec "nim c -d:ssl -p:src examples/error_handling.nim"
-  exec "nim c -d:ssl -p:src examples/data_analysis.nim"
-  exec "nim c -d:ssl -p:src examples/intraday_analysis.nim"
+  exec "nim c examples/basic_usage.nim"
+  exec "nim c examples/multiple_symbols.nim"
+  exec "nim c examples/json_export.nim"
+  exec "nim c examples/error_handling.nim"
+  exec "nim c examples/data_analysis.nim"
+  exec "nim c examples/intraday_analysis.nim"
 
 task docs, "Generate API documentation":
   mkDir "docs/api"
@@ -25,4 +26,5 @@ task docs, "Generate API documentation":
   exec "nim doc --outdir:docs/api src/yfnim/retriever.nim"
   exec "nim doc --outdir:docs/api src/yfnim/quote_types.nim"
   exec "nim doc --outdir:docs/api src/yfnim/quote_retriever.nim"
+
 

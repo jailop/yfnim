@@ -2,33 +2,11 @@
 
 yfnim provides both a library and CLI tool for accessing Yahoo Finance data. Choose your path:
 
-## For Developers (Library)
-
-If you want to integrate Yahoo Finance data into your Nim applications:
-
-👉 **[Library Getting Started Guide](library/getting-started.md)**
-
-- Learn how to install and use the yfnim library
-- Fetch historical OHLCV data
-- Get real-time quotes
-- Type-safe API with minimal dependencies
-
-```nim
-import yfnim
-import std/times
-
-let endTime = getTime().toUnix()
-let startTime = endTime - (7 * 86400)
-let history = getHistory("AAPL", Int1d, startTime, endTime)
-
-echo "Retrieved ", history.data.len, " records"
-```
-
 ## For Command-Line Users (CLI Tool)
 
 If you want to access market data from the terminal:
 
-👉 **[CLI Quick Start Guide](cli/quick-start.md)**
+**[CLI Quick Start Guide](cli/quick-start.md)**
 
 - Install the `yf` command-line tool
 - Learn basic commands
@@ -46,17 +24,29 @@ yf history AAPL --lookback 30d
 yf screen AAPL MSFT --criteria value
 ```
 
-## Installation
+## For Developers (Library)
 
-### Library
+If you want to integrate Yahoo Finance data into your Nim applications:
 
-```bash
-nimble install yfnim
+**[Library Getting Started Guide](library/getting-started.md)**
+
+- Learn how to install and use the yfnim library
+- Fetch historical OHLCV data
+- Get real-time quotes
+- Type-safe API with minimal dependencies
+
+```nim
+import yfnim
+import std/times
+
+let endTime = getTime().toUnix()
+let startTime = endTime - (7 * 86400)
+let history = getHistory("AAPL", Int1d, startTime, endTime)
+
+echo "Retrieved ", history.data.len, " records"
 ```
 
-### CLI Tool
-
-See the [CLI Installation Guide](cli/installation.md) for detailed instructions.
+## Installation
 
 ```bash
 git clone https://codeberg.org/jailop/yfnim.git
