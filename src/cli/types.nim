@@ -2,7 +2,6 @@
 ##
 ## Defines types and enums used across the CLI tool
 
-import std/tables
 import ../yfnim/types  # For Interval enum
 
 type
@@ -24,12 +23,11 @@ type
   GlobalConfig* = object
     ## Global configuration shared across all commands
     format*: OutputFormat       ## Output format
-    quiet*: bool                ## Suppress progress messages
+    verbose*: bool              ## Show progress and informational messages (also enables debug output)
     noHeader*: bool             ## Omit header row
     colorize*: bool             ## Use colors in output
     precision*: int             ## Decimal places for prices (default: 2)
     dateFormat*: DateFormat     ## Date output format
-    debug*: bool                ## Debug mode with verbose output
     refresh*: bool              ## Force refresh, bypass cache
     cacheEnabled*: bool         ## Enable caching
     cacheTtl*: int64            ## Cache TTL in seconds
@@ -118,12 +116,11 @@ proc newGlobalConfig*(): GlobalConfig =
   ## Create a GlobalConfig with default values
   GlobalConfig(
     format: FormatTable,
-    quiet: false,
+    verbose: false,
     noHeader: false,
     colorize: true,
     precision: 2,
     dateFormat: DateISO,
-    debug: false,
     refresh: false,
     cacheEnabled: true,
     cacheTtl: 300  # 5 minutes

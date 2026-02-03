@@ -2,7 +2,7 @@
 ##
 ## Retrieves and displays historical OHLCV data for a symbol
 
-import std/[os, times, strutils, options]
+import std/[options]
 import ../[types, config, utils, formatters, cache]
 import ../../yfnim/[types as ytypes, retriever]
 
@@ -19,7 +19,7 @@ proc executeHistory*(config: GlobalConfig, options: HistoryOptions, symbol: stri
     raise newException(CliError, "Symbol is required")
   
   # Show progress message unless quiet
-  if not config.quiet:
+  if config.verbose:
     printInfo("Fetching historical data for " & symbol & "...", config)
   
   try:
@@ -56,7 +56,7 @@ proc executeHistory*(config: GlobalConfig, options: HistoryOptions, symbol: stri
       if cached.isSome:
         history = cached.get()
         usedCache = true
-        if not config.quiet:
+        if config.verbose:
           printInfo("Using cached data", config)
     
     # If not in cache or refresh requested, fetch from API
@@ -72,12 +72,12 @@ proc executeHistory*(config: GlobalConfig, options: HistoryOptions, symbol: stri
     
     # Check if we got any data
     if history.data.len == 0:
-      if not config.quiet:
+      if config.verbose:
         printWarning("No data available for " & symbol, config)
       return
     
     # Show success message unless quiet
-    if not config.quiet:
+    if config.verbose:
       printSuccess("Retrieved " & $history.data.len & " records", config)
     
     # Format and display output

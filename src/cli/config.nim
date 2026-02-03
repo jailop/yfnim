@@ -2,7 +2,7 @@
 ##
 ## Handles command-line argument parsing and configuration using std/parseopt
 
-import std/[os, strutils, parseopt, editdistance]
+import std/[os, strutils, parseopt]
 import types, utils
 
 
@@ -137,8 +137,8 @@ proc parseGlobalOptions*(config: var GlobalConfig, p: var OptParser) =
         next(p)
         return
       
-      of "quiet", "q":
-        config.quiet = true
+      of "verbose", "v":
+        config.verbose = true
         next(p)
         return
       
@@ -175,11 +175,6 @@ proc parseGlobalOptions*(config: var GlobalConfig, p: var OptParser) =
         next(p)
         return
       
-      of "debug":
-        config.debug = true
-        next(p)
-        return
-      
       of "refresh":
         config.refresh = true
         next(p)
@@ -199,7 +194,7 @@ proc parseHistoryArgs*(): tuple[config: GlobalConfig, options: HistoryOptions] =
   var options = newHistoryOptions()
   
   # Start parsing from index 2 (after "yf history")
-  var p = initOptParser(commandLineParams(), shortNoVal = {'q'}, longNoVal = @["quiet", "no-header", "no-color", "debug", "help", "refresh"])
+  var p = initOptParser(commandLineParams(), shortNoVal = {'v'}, longNoVal = @["verbose", "no-header", "no-color", "help", "refresh"])
   next(p)  # Initialize parser to first item
   
   # Skip to the command
@@ -215,7 +210,7 @@ proc parseHistoryArgs*(): tuple[config: GlobalConfig, options: HistoryOptions] =
     of cmdLongOption, cmdShortOption:
       case p.key.toLower()
       # Global options
-      of "format", "f", "quiet", "q", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "debug", "refresh":
+      of "format", "f", "verbose", "v", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "refresh":
         parseGlobalOptions(config, p)
         continue
       
@@ -266,7 +261,7 @@ proc parseQuoteArgs*(): tuple[config: GlobalConfig, options: QuoteOptions] =
   var config = newGlobalConfig()
   var options = newQuoteOptions()
   
-  var p = initOptParser(commandLineParams(), shortNoVal = {'q'}, longNoVal = @["quiet", "no-header", "no-color", "debug", "help", "refresh"])
+  var p = initOptParser(commandLineParams(), shortNoVal = {'v'}, longNoVal = @["verbose", "no-header", "no-color", "help", "refresh"])
   next(p)  # Initialize parser to first item
   
   # Skip to the command
@@ -282,7 +277,7 @@ proc parseQuoteArgs*(): tuple[config: GlobalConfig, options: QuoteOptions] =
     of cmdLongOption, cmdShortOption:
       case p.key.toLower()
       # Global options
-      of "format", "f", "quiet", "q", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "debug", "refresh":
+      of "format", "f", "verbose", "v", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "refresh":
         parseGlobalOptions(config, p)
         continue
       
@@ -315,7 +310,7 @@ proc parseCompareArgs*(): tuple[config: GlobalConfig, options: CompareOptions] =
   var config = newGlobalConfig()
   var options = newCompareOptions()
   
-  var p = initOptParser(commandLineParams(), shortNoVal = {'q'}, longNoVal = @["quiet", "no-header", "no-color", "debug", "help", "refresh"])
+  var p = initOptParser(commandLineParams(), shortNoVal = {'v'}, longNoVal = @["verbose", "no-header", "no-color", "help", "refresh"])
   next(p)  # Initialize parser to first item
   
   # Skip to the command
@@ -331,7 +326,7 @@ proc parseCompareArgs*(): tuple[config: GlobalConfig, options: CompareOptions] =
     of cmdLongOption, cmdShortOption:
       case p.key.toLower()
       # Global options
-      of "format", "f", "quiet", "q", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "debug", "refresh":
+      of "format", "f", "verbose", "v", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "refresh":
         parseGlobalOptions(config, p)
         continue
       
@@ -364,7 +359,7 @@ proc parseScreenArgs*(): tuple[config: GlobalConfig, options: ScreenOptions] =
   var config = newGlobalConfig()
   var options = newScreenOptions()
   
-  var p = initOptParser(commandLineParams(), shortNoVal = {'q'}, longNoVal = @["quiet", "no-header", "no-color", "debug", "help", "refresh"])
+  var p = initOptParser(commandLineParams(), shortNoVal = {'v'}, longNoVal = @["verbose", "no-header", "no-color", "help", "refresh"])
   next(p)  # Initialize parser to first item
   
   # Skip to the command
@@ -380,7 +375,7 @@ proc parseScreenArgs*(): tuple[config: GlobalConfig, options: ScreenOptions] =
     of cmdLongOption, cmdShortOption:
       case p.key.toLower()
       # Global options
-      of "format", "f", "quiet", "q", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "debug", "refresh":
+      of "format", "f", "verbose", "v", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "refresh":
         parseGlobalOptions(config, p)
         continue
       
@@ -428,7 +423,7 @@ proc parseActionsArgs*(commandName: string): tuple[config: GlobalConfig, options
   var config = newGlobalConfig()
   var options = newActionsOptions()
   
-  var p = initOptParser(commandLineParams(), shortNoVal = {'q'}, longNoVal = @["quiet", "no-header", "no-color", "debug", "help", "refresh"])
+  var p = initOptParser(commandLineParams(), shortNoVal = {'v'}, longNoVal = @["verbose", "no-header", "no-color", "help", "refresh"])
   next(p)  # Initialize parser to first item
   
   # Skip to the command
@@ -444,7 +439,7 @@ proc parseActionsArgs*(commandName: string): tuple[config: GlobalConfig, options
     of cmdLongOption, cmdShortOption:
       case p.key.toLower()
       # Global options
-      of "format", "f", "quiet", "q", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "debug", "refresh":
+      of "format", "f", "verbose", "v", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "refresh":
         parseGlobalOptions(config, p)
         continue
       
@@ -491,7 +486,7 @@ proc parseDownloadArgs*(): tuple[config: GlobalConfig, options: HistoryOptions] 
   var config = newGlobalConfig()
   var options = newHistoryOptions()
   
-  var p = initOptParser(commandLineParams(), shortNoVal = {'q'}, longNoVal = @["quiet", "no-header", "no-color", "debug", "help", "refresh"])
+  var p = initOptParser(commandLineParams(), shortNoVal = {'v'}, longNoVal = @["verbose", "no-header", "no-color", "help", "refresh"])
   next(p)  # Initialize parser to first item
   
   # Skip to the command
@@ -507,7 +502,7 @@ proc parseDownloadArgs*(): tuple[config: GlobalConfig, options: HistoryOptions] 
     of cmdLongOption, cmdShortOption:
       case p.key.toLower()
       # Global options
-      of "format", "f", "quiet", "q", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "debug", "refresh":
+      of "format", "f", "verbose", "v", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "refresh":
         parseGlobalOptions(config, p)
         continue
       
@@ -564,7 +559,7 @@ proc parseIndicatorsArgs*(): tuple[config: GlobalConfig, options: IndicatorsOpti
   var config = newGlobalConfig()
   var options = newIndicatorsOptions()
   
-  var p = initOptParser(commandLineParams(), shortNoVal = {'q'}, longNoVal = @["quiet", "no-header", "no-color", "debug", "help", "refresh", "macd", "stochastic", "obv", "vwap", "all"])
+  var p = initOptParser(commandLineParams(), shortNoVal = {'v'}, longNoVal = @["verbose", "no-header", "no-color", "help", "refresh", "macd", "stochastic", "obv", "vwap", "all"])
   next(p)  # Initialize parser to first item
   
   # Skip to the command
@@ -580,7 +575,7 @@ proc parseIndicatorsArgs*(): tuple[config: GlobalConfig, options: IndicatorsOpti
     of cmdLongOption, cmdShortOption:
       case p.key.toLower()
       # Global options
-      of "format", "f", "quiet", "q", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "debug", "refresh":
+      of "format", "f", "verbose", "v", "no-header", "no-color", "no-colour", "precision", "p", "date-format", "refresh":
         parseGlobalOptions(config, p)
         continue
       

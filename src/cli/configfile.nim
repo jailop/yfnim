@@ -73,8 +73,8 @@ proc parseConfigLine(line: string, config: var FileConfig) =
       config.cacheTtl = parseInt(value).int64
     except ValueError:
       discard
-  of "quiet":
-    config.quiet = parseBool(value)
+  of "verbose":
+    config.verbose = parseBool(value)
   else:
     discard  # Unknown key, ignore
 

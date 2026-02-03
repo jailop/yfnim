@@ -2,7 +2,7 @@
 ##
 ## Retrieves and displays current quote data for one or more symbols
 
-import std/[os, strutils, sequtils, options]
+import std/[options]
 import ../[types, config, utils, formatters, cache]
 import ../../yfnim/[quote_types, quote_retriever]
 
@@ -19,7 +19,7 @@ proc executeQuote*(config: GlobalConfig, options: QuoteOptions, symbols: seq[str
     raise newException(CliError, "At least one symbol is required")
   
   # Show progress message unless quiet
-  if not config.quiet:
+  if config.verbose:
     let symbolStr = if symbols.len == 1: symbols[0] else: $symbols.len & " symbols"
     printInfo("Fetching quote data for " & symbolStr & "...", config)
   
@@ -51,17 +51,17 @@ proc executeQuote*(config: GlobalConfig, options: QuoteOptions, symbols: seq[str
         cacheObj.setCachedQuote(quote.symbol, quote)
         quotes.add(quote)
     
-    if not config.quiet and cachedCount > 0:
+    if config.verbose and cachedCount > 0:
       printInfo("Used cached data for " & $cachedCount & " symbol(s)", config)
     
     # Check if we got any data
     if quotes.len == 0:
-      if not config.quiet:
+      if config.verbose:
         printWarning("No quote data available", config)
       return
     
     # Show success message unless quiet
-    if not config.quiet:
+    if config.verbose:
       printSuccess("Retrieved " & $quotes.len & " quote(s)", config)
     
     # Format and display output

@@ -18,7 +18,7 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
     raise newException(CliError, "Symbol is required")
   
   # Show progress message unless quiet
-  if not config.quiet:
+  if config.verbose:
     printInfo(fmt"Calculating indicators for {options.symbol}...", config)
   
   try:
@@ -56,13 +56,13 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
     let latestPrice = latestBar.close
     
     # Print header
-    if not config.quiet:
-      echo ""
-      echo "═".repeat(70)
-      echo fmt"Technical Indicators: {options.symbol}"
-      echo fmt"Latest Price: ${latestPrice:.2f}  |  Data Points: {history.data.len}  |  Interval: {history.interval}"
-      echo "═".repeat(70)
-      echo ""
+    if config.verbose:
+      stderr.writeLine("")
+      stderr.writeLine("═".repeat(70))
+      stderr.writeLine(fmt"Technical Indicators: {options.symbol}")
+      stderr.writeLine(fmt"Latest Price: ${latestPrice:.2f}  |  Data Points: {history.data.len}  |  Interval: {history.interval}")
+      stderr.writeLine("═".repeat(70))
+      stderr.writeLine("")
     
     # Calculate and display indicators
     var indicatorCount = 0
@@ -81,7 +81,7 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
             echo fmt"  SMA({period:>3}):  ${latest:>10.2f}   {signal} ${abs(diff):>6.2f} ({diffPct:>+6.2f}%)"
             indicatorCount += 1
         except IndicatorError as e:
-          if not config.quiet:
+          if config.verbose:
             printWarning(fmt"SMA({period}): {e.msg}", config)
       echo ""
     
@@ -98,7 +98,7 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
             echo fmt"  EMA({period:>3}):  ${latest:>10.2f}   {signal} ${abs(diff):>6.2f} ({diffPct:>+6.2f}%)"
             indicatorCount += 1
         except IndicatorError as e:
-          if not config.quiet:
+          if config.verbose:
             printWarning(fmt"EMA({period}): {e.msg}", config)
       echo ""
     
@@ -115,7 +115,7 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
             echo fmt"  WMA({period:>3}):  ${latest:>10.2f}   {signal} ${abs(diff):>6.2f} ({diffPct:>+6.2f}%)"
             indicatorCount += 1
         except IndicatorError as e:
-          if not config.quiet:
+          if config.verbose:
             printWarning(fmt"WMA({period}): {e.msg}", config)
       echo ""
     
@@ -133,7 +133,7 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
           echo ""
           indicatorCount += 1
       except IndicatorError as e:
-        if not config.quiet:
+        if config.verbose:
           printWarning(fmt"RSI: {e.msg}", config)
     
     if options.macd:
@@ -152,7 +152,7 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
           echo ""
           indicatorCount += 1
       except IndicatorError as e:
-        if not config.quiet:
+        if config.verbose:
           printWarning(fmt"MACD: {e.msg}", config)
     
     if options.stochastic:
@@ -169,7 +169,7 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
           echo ""
           indicatorCount += 1
       except IndicatorError as e:
-        if not config.quiet:
+        if config.verbose:
           printWarning(fmt"Stochastic: {e.msg}", config)
     
     # Volatility Indicators
@@ -196,7 +196,7 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
           echo ""
           indicatorCount += 1
       except IndicatorError as e:
-        if not config.quiet:
+        if config.verbose:
           printWarning(fmt"Bollinger Bands: {e.msg}", config)
     
     if options.atr > 0:
@@ -210,7 +210,7 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
           echo ""
           indicatorCount += 1
       except IndicatorError as e:
-        if not config.quiet:
+        if config.verbose:
           printWarning(fmt"ATR: {e.msg}", config)
     
     if options.adx > 0:
@@ -226,7 +226,7 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
           echo ""
           indicatorCount += 1
       except IndicatorError as e:
-        if not config.quiet:
+        if config.verbose:
           printWarning(fmt"ADX: {e.msg}", config)
     
     # Volume Indicators
@@ -247,7 +247,7 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
           echo fmt"  OBV:            {latest:>15.0f}   [{trend}]"
           indicatorCount += 1
         except IndicatorError as e:
-          if not config.quiet:
+          if config.verbose:
             printWarning(fmt"OBV: {e.msg}", config)
       
       if options.vwap:
@@ -259,30 +259,30 @@ proc executeIndicators*(config: GlobalConfig, options: IndicatorsOptions) =
           echo fmt"  VWAP:           ${latest:>10.2f}   [{signal}]"
           indicatorCount += 1
         except IndicatorError as e:
-          if not config.quiet:
+          if config.verbose:
             printWarning(fmt"VWAP: {e.msg}", config)
       
       echo ""
     
     # Summary
-    if not config.quiet:
-      echo "═".repeat(70)
-      echo fmt"Calculated {indicatorCount} indicators"
-      echo "═".repeat(70)
+    if config.verbose:
+      stderr.writeLine("═".repeat(70))
+      stderr.writeLine(fmt"Calculated {indicatorCount} indicators")
+      stderr.writeLine("═".repeat(70))
     
     # If no indicators were requested, show hint
     if indicatorCount == 0:
-      if not config.quiet:
-        echo ""
-        echo "No indicators specified. Try:"
-        echo "  --sma 20,50,200   # Simple moving averages"
-        echo "  --ema 12,26       # Exponential moving averages"
-        echo "  --rsi 14          # Relative Strength Index"
-        echo "  --macd            # MACD indicator"
-        echo "  --bb 20           # Bollinger Bands"
-        echo "  --all             # All indicators with defaults"
-        echo ""
-        echo "Run 'yf indicators --help' for more options"
+      if config.verbose:
+        stderr.writeLine("")
+        stderr.writeLine("No indicators specified. Try:")
+        stderr.writeLine("  --sma 20,50,200   # Simple moving averages")
+        stderr.writeLine("  --ema 12,26       # Exponential moving averages")
+        stderr.writeLine("  --rsi 14          # Relative Strength Index")
+        stderr.writeLine("  --macd            # MACD indicator")
+        stderr.writeLine("  --bb 20           # Bollinger Bands")
+        stderr.writeLine("  --all             # All indicators with defaults")
+        stderr.writeLine("")
+        stderr.writeLine("Run 'yf indicators --help' for more options")
   
   except IndicatorError as e:
     raise newException(CliError, "Indicator calculation failed: " & e.msg)

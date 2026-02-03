@@ -48,8 +48,8 @@ proc infoMsg*(msg: string, config: GlobalConfig): string =
 
 
 proc debugMsg*(msg: string, config: GlobalConfig) =
-  ## Print debug message if debug mode is enabled
-  if config.debug:
+  ## Print debug message if verbose mode is enabled
+  if config.verbose:
     stderr.writeLine(colorize("[DEBUG] " & msg, ColorGray, config))
 
 
@@ -245,23 +245,29 @@ proc truncate*(s: string, maxLen: int): string =
 
 
 proc printError*(msg: string, config: GlobalConfig) =
-  ## Print error message to stderr
+  ## Print error message to stderr (always shown)
   stderr.writeLine(errorMsg(msg, config))
 
 
 proc printWarning*(msg: string, config: GlobalConfig) =
-  ## Print warning message to stderr
-  if not config.quiet:
+  ## Print warning message to stderr (respects verbose flag)
+  if config.verbose:
     stderr.writeLine(warningMsg(msg, config))
 
 
 proc printInfo*(msg: string, config: GlobalConfig) =
-  ## Print info message to stderr
-  if not config.quiet:
+  ## Print info message to stderr (respects verbose flag)
+  if config.verbose:
     stderr.writeLine(infoMsg(msg, config))
 
 
 proc printSuccess*(msg: string, config: GlobalConfig) =
-  ## Print success message to stderr
-  if not config.quiet:
+  ## Print success message to stderr (respects verbose flag)
+  if config.verbose:
     stderr.writeLine(successMsg(msg, config))
+
+
+proc logToStderr*(msg: string) =
+  ## Write a message directly to stderr without formatting
+  ## Use for informational output that should not mix with data on stdout
+  stderr.writeLine(msg)

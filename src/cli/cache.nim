@@ -3,9 +3,8 @@
 ## Provides caching functionality to reduce API calls and improve performance.
 ## Caches are stored in ~/.cache/yfnim/ with TTL support.
 
-import std/[tables, times, os, json, strutils, hashes, options]
+import std/[tables, times, os, hashes, options]
 import ../yfnim/[types as ytypes, quote_types]
-import types
 
 type
   CacheEntry[T] = object

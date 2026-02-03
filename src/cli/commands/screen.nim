@@ -2,7 +2,7 @@
 ##
 ## Screens stocks based on various criteria
 
-import std/[os, strutils, tables, options]
+import std/[options]
 import ../[types, config, utils, formatters, filter]
 import ../../yfnim/[quote_types, quote_retriever]
 
@@ -19,7 +19,7 @@ proc executeScreen*(config: GlobalConfig, options: ScreenOptions, symbols: seq[s
     raise newException(CliError, "At least one symbol is required")
   
   # Show progress message unless quiet
-  if not config.quiet:
+  if config.verbose:
     printInfo("Screening " & $symbols.len & " symbols with criteria: " & $options.criteria & "...", config)
   
   try:
@@ -28,7 +28,7 @@ proc executeScreen*(config: GlobalConfig, options: ScreenOptions, symbols: seq[s
     
     # Check if we got any data
     if quotes.len == 0:
-      if not config.quiet:
+      if config.verbose:
         printWarning("No quote data available", config)
       return
     
@@ -68,7 +68,7 @@ proc executeScreen*(config: GlobalConfig, options: ScreenOptions, symbols: seq[s
     of CriteriaCustom:
       # Custom filtering using expression parser
       if options.whereClause.len == 0:
-        if not config.quiet:
+        if config.verbose:
           printWarning("Custom criteria requires --where clause", config)
         filteredQuotes = quotes
       else:
@@ -82,12 +82,12 @@ proc executeScreen*(config: GlobalConfig, options: ScreenOptions, symbols: seq[s
     
     # Show results
     if filteredQuotes.len == 0:
-      if not config.quiet:
+      if config.verbose:
         printWarning("No symbols match the criteria", config)
       return
     
     # Show success message unless quiet
-    if not config.quiet:
+    if config.verbose:
       printSuccess($filteredQuotes.len & " of " & $quotes.len & " symbols match the criteria", config)
     
     # Format and display output

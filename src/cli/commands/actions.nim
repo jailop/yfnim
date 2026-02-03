@@ -2,8 +2,8 @@
 ##
 ## Retrieves and displays corporate actions (dividends, splits) for a symbol
 
-import std/[os, times, strutils, strformat]
-import ../[types, config, utils, formatters]
+import std/[times, strutils, strformat]
+import ../[types, config, utils]
 import ../../yfnim/[types as ytypes, actions_retriever]
 
 proc executeDividends*(config: GlobalConfig, options: ActionsOptions) =
@@ -18,7 +18,7 @@ proc executeDividends*(config: GlobalConfig, options: ActionsOptions) =
     raise newException(CliError, "Symbol is required")
   
   # Show progress message unless quiet
-  if not config.quiet:
+  if config.verbose:
     printInfo("Fetching dividend history for " & options.symbol & "...", config)
   
   try:
@@ -41,12 +41,12 @@ proc executeDividends*(config: GlobalConfig, options: ActionsOptions) =
     
     # Check if we got any data
     if dividends.len == 0:
-      if not config.quiet:
+      if config.verbose:
         printWarning("No dividend history available for " & options.symbol, config)
       return
     
     # Show success message unless quiet
-    if not config.quiet:
+    if config.verbose:
       printSuccess("Retrieved " & $dividends.len & " dividends", config)
     
     # Format and display output
@@ -76,30 +76,34 @@ proc executeDividends*(config: GlobalConfig, options: ActionsOptions) =
         echo dividend.date.format("yyyy-MM-dd") & "\t" & $dividend.amount
     
     else:
-      # Table format (default)
-      echo ""
-      echo "Dividend History: " & options.symbol
-      echo "─".repeat(50)
-      echo "Date          Amount"
-      echo "─".repeat(50)
+      # Table format (default) - headers/decorations to stderr, data to stdout
+      if config.verbose:
+        stderr.writeLine("")
+        stderr.writeLine("Dividend History: " & options.symbol)
+        stderr.writeLine("─".repeat(50))
+        stderr.writeLine("Date          Amount")
+        stderr.writeLine("─".repeat(50))
       
       # Show all dividends (or recent ones if too many)
       let maxShow = 100
       let toShow = if dividends.len > maxShow: maxShow else: dividends.len
       let startIdx = if dividends.len > maxShow: dividends.len - maxShow else: 0
       
+      # Data rows go to stdout (main information)
       for i in startIdx..<dividends.len:
         let dividend = dividends[i]
         let dateStr = dividend.date.format("yyyy-MM-dd")
         let amountStr = formatFloat(dividend.amount, ffDecimal, config.precision)
         echo fmt"{dateStr:<12}  ${amountStr:>8}"
       
-      if dividends.len > maxShow:
-        echo ""
-        echo fmt"(Showing last {maxShow} of {dividends.len} dividends)"
-      
-      echo "─".repeat(50)
-      echo fmt"Total: {dividends.len} dividends"
+      # Footers and summaries to stderr (informative)
+      if config.verbose:
+        if dividends.len > maxShow:
+          stderr.writeLine("")
+          stderr.writeLine(fmt"(Showing last {maxShow} of {dividends.len} dividends)")
+        
+        stderr.writeLine("─".repeat(50))
+        stderr.writeLine(fmt"Total: {dividends.len} dividends")
     
   except ActionsError as e:
     raise newException(CliError, "Failed to retrieve dividends: " & e.msg)
@@ -119,7 +123,7 @@ proc executeSplits*(config: GlobalConfig, options: ActionsOptions) =
     raise newException(CliError, "Symbol is required")
   
   # Show progress message unless quiet
-  if not config.quiet:
+  if config.verbose:
     printInfo("Fetching split history for " & options.symbol & "...", config)
   
   try:
@@ -142,12 +146,12 @@ proc executeSplits*(config: GlobalConfig, options: ActionsOptions) =
     
     # Check if we got any data
     if splits.len == 0:
-      if not config.quiet:
+      if config.verbose:
         printWarning("No split history available for " & options.symbol, config)
       return
     
     # Show success message unless quiet
-    if not config.quiet:
+    if config.verbose:
       printSuccess("Retrieved " & $splits.len & " splits", config)
     
     # Format and display output
@@ -177,19 +181,23 @@ proc executeSplits*(config: GlobalConfig, options: ActionsOptions) =
         echo split.date.format("yyyy-MM-dd") & "\t" & split.splitRatio
     
     else:
-      # Table format (default)
-      echo ""
-      echo "Stock Split History: " & options.symbol
-      echo "─".repeat(50)
-      echo "Date          Ratio"
-      echo "─".repeat(50)
+      # Table format (default) - headers/decorations to stderr, data to stdout
+      if config.verbose:
+        stderr.writeLine("")
+        stderr.writeLine("Stock Split History: " & options.symbol)
+        stderr.writeLine("─".repeat(50))
+        stderr.writeLine("Date          Ratio")
+        stderr.writeLine("─".repeat(50))
       
+      # Data rows go to stdout (main information)
       for split in splits:
         let dateStr = split.date.format("yyyy-MM-dd")
         echo fmt"{dateStr:<12}  {split.splitRatio:>10}"
       
-      echo "─".repeat(50)
-      echo fmt"Total: {splits.len} splits"
+      # Footer to stderr (informative)
+      if config.verbose:
+        stderr.writeLine("─".repeat(50))
+        stderr.writeLine(fmt"Total: {splits.len} splits")
     
   except ActionsError as e:
     raise newException(CliError, "Failed to retrieve splits: " & e.msg)
@@ -209,7 +217,7 @@ proc executeActions*(config: GlobalConfig, options: ActionsOptions) =
     raise newException(CliError, "Symbol is required")
   
   # Show progress message unless quiet
-  if not config.quiet:
+  if config.verbose:
     printInfo("Fetching corporate actions for " & options.symbol & "...", config)
   
   try:
@@ -232,12 +240,12 @@ proc executeActions*(config: GlobalConfig, options: ActionsOptions) =
     
     # Check if we got any data
     if actions.dividends.len == 0 and actions.splits.len == 0:
-      if not config.quiet:
+      if config.verbose:
         printWarning("No corporate actions available for " & options.symbol, config)
       return
     
     # Show success message unless quiet
-    if not config.quiet:
+    if config.verbose:
       printSuccess("Retrieved " & $actions.dividends.len & " dividends, " & 
                    $actions.splits.len & " splits", config)
     
@@ -271,42 +279,48 @@ proc executeActions*(config: GlobalConfig, options: ActionsOptions) =
         echo "Split," & split.date.format("yyyy-MM-dd") & "," & split.splitRatio
     
     else:
-      # Table format (default)
-      echo ""
-      echo "Corporate Actions: " & options.symbol
-      echo "═".repeat(60)
+      # Table format (default) - headers/decorations to stderr, data to stdout
+      if config.verbose:
+        stderr.writeLine("")
+        stderr.writeLine("Corporate Actions: " & options.symbol)
+        stderr.writeLine("═".repeat(60))
       
       # Show splits first (less common, more impactful)
       if actions.splits.len > 0:
-        echo ""
-        echo "📊 Stock Splits:"
-        echo "─".repeat(60)
+        if config.verbose:
+          stderr.writeLine("")
+          stderr.writeLine("📊 Stock Splits:")
+          stderr.writeLine("─".repeat(60))
+        # Data rows go to stdout
         for split in actions.splits:
           echo "  " & split.date.format("yyyy-MM-dd") & "  " & split.splitRatio & " split"
       
       # Show dividends (show last 20 if more than that)
       if actions.dividends.len > 0:
-        echo ""
-        echo "💰 Dividends:"
-        echo "─".repeat(60)
+        if config.verbose:
+          stderr.writeLine("")
+          stderr.writeLine("💰 Dividends:")
+          stderr.writeLine("─".repeat(60))
         
         let maxShow = 20
         let toShow = if actions.dividends.len > maxShow: maxShow else: actions.dividends.len
         let startIdx = if actions.dividends.len > maxShow: actions.dividends.len - maxShow else: 0
         
+        # Data rows go to stdout
         for i in countdown(actions.dividends.len - 1, startIdx):
           let dividend = actions.dividends[i]
           let amountStr = formatFloat(dividend.amount, ffDecimal, config.precision)
           echo "  " & dividend.date.format("yyyy-MM-dd") & "  $" & amountStr
         
-        if actions.dividends.len > maxShow:
-          echo ""
-          echo fmt"  ... and {actions.dividends.len - maxShow} more (use 'yf dividends {options.symbol}' for full history)"
+        if actions.dividends.len > maxShow and config.verbose:
+          stderr.writeLine("")
+          stderr.writeLine(fmt"  ... and {actions.dividends.len - maxShow} more (use 'yf dividends {options.symbol}' for full history)")
       
-      # Summary
-      echo ""
-      echo "═".repeat(60)
-      echo fmt"Total: {actions.splits.len} splits, {actions.dividends.len} dividends"
+      # Summary to stderr
+      if config.verbose:
+        stderr.writeLine("")
+        stderr.writeLine("═".repeat(60))
+        stderr.writeLine(fmt"Total: {actions.splits.len} splits, {actions.dividends.len} dividends")
     
   except ActionsError as e:
     raise newException(CliError, "Failed to retrieve corporate actions: " & e.msg)

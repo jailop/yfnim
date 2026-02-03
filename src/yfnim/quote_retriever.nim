@@ -148,11 +148,11 @@ proc parseQuoteResponse*(body: string): Quote =
       raise newException(QuoteError, "No data returned from API")
     
     # Get the first result and extract meta
-    let result = resultArray[0]
-    if not result.hasKey("meta"):
+    let res = resultArray[0]
+    if not res.hasKey("meta"):
       raise newException(JsonParsingError, "Missing 'meta' field in result")
     
-    let meta = result["meta"]
+    let meta = res["meta"]
     
     # Parse Quote object from meta
     # Get symbol first to initialize Quote

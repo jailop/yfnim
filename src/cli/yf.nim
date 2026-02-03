@@ -1,4 +1,4 @@
-import std/[os, strutils]
+import std/[os]
 import types, config, utils
 import commands/[history, quote, compare, screen, actions, download, indicators]
 
@@ -33,12 +33,11 @@ COMMANDS:
 
 GLOBAL OPTIONS:
     -f, --format <format>       Output format (table, csv, json, tsv, minimal) [default: table]
-    -q, --quiet                 Suppress informational messages
+    -v, --verbose               Show progress and informational messages
     --no-header                 Omit header row in output
     --no-color                  Disable colored output
     -p, --precision <n>         Decimal precision for prices [default: 2]
     --date-format <format>      Date format (iso, us, unix, full) [default: iso]
-    --debug                     Enable debug output
 """
 
 proc printHistoryHelp() =
@@ -499,16 +498,16 @@ proc main*() =
   
   except CliError as e:
     printError(e.msg, config)
-    echo ""
-    echo "Run 'yf help' for usage information."
+    stderr.writeLine("")
+    stderr.writeLine("Run 'yf help' for usage information.")
     quit(1)
   
   except Exception as e:
     printError("Unexpected error: " & e.msg, config)
-    if config.debug:
-      echo ""
-      echo "Stack trace:"
-      echo getStackTrace(e)
+    if config.verbose:
+      stderr.writeLine("")
+      stderr.writeLine("Stack trace:")
+      stderr.writeLine(getStackTrace(e))
     quit(2)
 
 # Run main program

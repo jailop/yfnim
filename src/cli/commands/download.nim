@@ -18,7 +18,7 @@ proc executeDownload*(config: GlobalConfig, options: HistoryOptions) =
     raise newException(CliError, "At least one symbol is required")
   
   # Show progress message unless quiet
-  if not config.quiet:
+  if config.verbose:
     printInfo("Downloading data for " & $options.symbols.len & " symbols...", config)
   
   try:
@@ -57,22 +57,22 @@ proc executeDownload*(config: GlobalConfig, options: HistoryOptions) =
       failCount += 1
     
     # Show summary unless quiet
-    if not config.quiet:
-      echo ""
-      echo "═".repeat(60)
-      echo fmt"Download complete in {duration} seconds"
-      echo fmt"✓ Successful: {successCount}"
+    if config.verbose:
+      stderr.writeLine("")
+      stderr.writeLine("═".repeat(60))
+      stderr.writeLine(fmt"Download complete in {duration} seconds")
+      stderr.writeLine(fmt"✓ Successful: {successCount}")
       if failCount > 0:
-        echo fmt"✗ Failed: {failCount}"
-      echo "═".repeat(60)
+        stderr.writeLine(fmt"✗ Failed: {failCount}")
+      stderr.writeLine("═".repeat(60))
     
     # Report failures
-    if failCount > 0 and not config.quiet:
-      echo ""
-      echo "❌ Failed downloads:"
+    if failCount > 0 and config.verbose:
+      stderr.writeLine("")
+      stderr.writeLine("❌ Failed downloads:")
       for ticker, error in result.failed:
-        echo fmt"  {ticker}: {error}"
-      echo ""
+        stderr.writeLine(fmt"  {ticker}: {error}")
+      stderr.writeLine("")
     
     # Output successful downloads
     case config.format
@@ -114,20 +114,20 @@ proc executeDownload*(config: GlobalConfig, options: HistoryOptions) =
     
     else:
       # Table format - summary only
-      if not config.quiet:
-        echo "📊 Summary:"
+      if config.verbose:
+        stderr.writeLine("📊 Summary:")
         for ticker, history in result.successful:
           if history.data.len > 0:
             let first = history.data[0]
             let last = history.data[^1]
             let firstDate = formatDate(first.time, config.dateFormat)
             let lastDate = formatDate(last.time, config.dateFormat)
-            echo fmt"  {ticker:<6} {history.data.len:>4} bars  {firstDate} to {lastDate}  ${last.close:.2f}"
+            stderr.writeLine(fmt"  {ticker:<6} {history.data.len:>4} bars  {firstDate} to {lastDate}  ${last.close:.2f}")
           else:
-            echo fmt"  {ticker:<6}    0 bars  (no data)"
+            stderr.writeLine(fmt"  {ticker:<6}    0 bars  (no data)")
         
-        echo ""
-        echo "Tip: Use --format csv or --format json for full data export"
+        stderr.writeLine("")
+        stderr.writeLine("Tip: Use --format csv or --format json for full data export")
     
     # Exit with error code if any downloads failed
     if failCount > 0:

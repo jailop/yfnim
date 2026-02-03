@@ -9,7 +9,7 @@
 ##   price > 100 and volume > 1000000
 ##   (pe < 15 or pb < 2) and yield > 3
 
-import std/[strutils, sequtils, tables, options]
+import std/[strutils, options]
 import ../yfnim/quote_types
 
 type

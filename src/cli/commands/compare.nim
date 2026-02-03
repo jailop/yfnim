@@ -2,9 +2,8 @@
 ##
 ## Compares multiple stocks side-by-side
 
-import std/[os, strutils]
 import ../[types, config, utils, formatters]
-import ../../yfnim/[quote_types, quote_retriever]
+import ../../yfnim/[quote_retriever]
 
 proc executeCompare*(config: GlobalConfig, options: CompareOptions, symbols: seq[string]) =
   ## Execute the compare command
@@ -19,7 +18,7 @@ proc executeCompare*(config: GlobalConfig, options: CompareOptions, symbols: seq
     raise newException(CliError, "At least two symbols are required for comparison")
   
   # Show progress message unless quiet
-  if not config.quiet:
+  if config.verbose:
     printInfo("Comparing " & $symbols.len & " symbols...", config)
   
   try:
@@ -28,17 +27,17 @@ proc executeCompare*(config: GlobalConfig, options: CompareOptions, symbols: seq
     
     # Check if we got any data
     if quotes.len == 0:
-      if not config.quiet:
+      if config.verbose:
         printWarning("No quote data available", config)
       return
     
     if quotes.len < 2:
-      if not config.quiet:
+      if config.verbose:
         printWarning("Need at least 2 quotes for comparison (got " & $quotes.len & ")", config)
       return
     
     # Show success message unless quiet
-    if not config.quiet:
+    if config.verbose:
       printSuccess("Retrieved " & $quotes.len & " quote(s) for comparison", config)
     
     # Format and display output (using same formatter as quote)

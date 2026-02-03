@@ -7,7 +7,7 @@
 ## - TSV: Tab-separated values
 ## - Minimal: Bare values for piping
 
-import std/[strutils, json, times, tables, strformat]
+import std/[strutils, json, strformat]
 import types, utils
 import ../yfnim/[types as ytypes, quote_types]
 

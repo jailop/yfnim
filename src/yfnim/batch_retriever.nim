@@ -2,7 +2,7 @@
 ##
 ## Provides functionality to download historical data for multiple tickers
 
-import std/[strformat, tables, times]
+import std/[strformat, tables]
 import types, retriever
 
 type
