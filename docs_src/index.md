@@ -11,18 +11,38 @@
 
 ## Features
 
-- **Market data**: Historical prices, real-time quotes, dividends, splits
+- **Market data**: Historical prices, real-time quotes, dividends,
+  splits
 - **Screening**: Filter stocks with custom expressions
-- **Technical analysis**: Built-in indicators like RSI, MACD, Bollinger Bands, and others
+- **Technical analysis**: Built-in indicators like RSI, MACD, Bollinger
+  Bands, and others
 - **Fast & efficient**: Written in Nim, minimal dependencies
-- **Unix-friendly**: Pipes, CSV/JSON export, stdin input, proper stderr logging
-- **Command abbreviations**: Use shortcuts like `yf h`, `yf q`, `yf comp`
+- **Unix-friendly**: Pipes, CSV/JSON export, stdin input, proper stderr
+  logging
+- **Command abbreviations**: Use shortcuts like `yf h`, `yf q`, `yf
+  comp`
 - **Dual interface**: Use as a library or standalone CLI tool
-- **Auto-generated help**: Built with cligen for consistent, colored help text
+- **Auto-generated help**: Built with cligen for consistent, colored
+  help text
 
-## Quick Start
+## Installation
 
-### CLI Tool
+If you only want to use the CLI tool, you can install it via Nimble:
+
+```bash
+nimble install yfnim
+```
+
+To build from source, clone the repository and run:
+
+```bash
+git clone https://codeberg.org/jailop/yfnim.git
+cd yfnim
+nimble build
+nimble install
+```
+
+## CLI Tool Examples
 
 ```bash
 # Get current quotes
@@ -58,11 +78,11 @@ yf h --symbol=AAPL     # history
 yf comp AAPL MSFT      # compare
 ```
 
-### Library
+### Library Example
 
 ```nim
-import yfnim
 import std/times
+import yfnim
 
 # Historical data
 let endTime = getTime().toUnix()
@@ -96,14 +116,6 @@ echo "Change: ", quote.regularMarketChangePercent, "%"
 - [Commands Reference](cli/commands.md) - Complete command documentation
 - [Screening Guide](cli/screening.md) - Advanced stock screening
 
-## Installation
-
-```bash
-git clone https://codeberg.org/jailop/yfnim.git
-cd yfnim
-nimble build
-nimble install
-```
 ## License
 
 MIT License - see [License](license.md) file.

@@ -134,7 +134,6 @@ nav:
     - library/historical-data.md
     - library/quote-data.md
   - CLI Tool:
-    - cli/installation.md
     - cli/quick-start.md
     - cli/commands.md
     - cli/screening.md

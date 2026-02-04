@@ -1,0 +1,3 @@
+more code is liability
+more complexity is a bug
+the user is the expert
